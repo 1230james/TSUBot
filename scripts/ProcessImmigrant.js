@@ -33,7 +33,7 @@ module.exports.main = function(message) {
 		message.react("🕒").then(clockReaction => {
 			let roblox = Roblox.getRoblox();
 			mlog("Got Roblox");
-			roblox.getIdByUsername(username).then(userId => {
+			roblox.getIdFromUsername(username).then(userId => {
 				mlog("Got UserId " + userId);
 				if (userId) {
                     roblox.getRankInGroup(4396304,userId).then(rank => {
@@ -49,7 +49,7 @@ module.exports.main = function(message) {
                                 else { if (isDC) { groupRank = 40; }
                                 else { groupRank = 30; } }
                                 
-                                roblox.setRank(groupIds.MAIN,userId,mainGroupRank).then(()=>{
+                                roblox.setRank(4396304,userId,groupRank).then(()=>{
                                     message.react("✅");
                                 }).catch(err => {
                                     if (err.hasOwnProperty("message") && err.message.includes("options.uri is a required argument")) {

@@ -9,6 +9,7 @@ const config = require("../config.json");
 const roblox = require("noblox.js");
 roblox.cookieLogin(config.roblox.cookie);
 setStatus("Verified online at " + (new Date()).toUTCString());
+log("Roblox is ready!");
 
 // Internal Libraries
 const DiscFunc = require("./DiscFunctions.js");

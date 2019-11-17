@@ -237,7 +237,7 @@ function getAppList(divkey) {
 	let username = s.substring(i1,i2);
 	
 	let roblox = Roblox.getRoblox();
-	roblox.getIdByUsername(username).then(userId => {
+	roblox.getIdFromUsername(username).then(userId => {
 		if (!(apps.hasOwnProperty(userId)) || !(apps[userId].hasOwnProperty(guildIds[message.guild.id]))) {
 			log("Previous app record not found - generating...");
 			let t1 = {}
@@ -257,7 +257,7 @@ module.exports.view = function(message,username) {
 	let roblox = Roblox.getRoblox();
 	if (username != null && username != "") {
 		message.channel.send("Fetching application; please wait...").then(msg => {
-			roblox.getIdByUsername(username).then(userId => {
+			roblox.getIdFromUsername(username).then(userId => {
 				let div = guildIds[message.guild.id];
 				let groupId = groupIds[div];
 				canUserApply(userId,div).then(canApply => {
@@ -302,7 +302,7 @@ module.exports.list = function(message) {
 			let s = "";
 			let c = 0;
 			for (user of appList) {
-				roblox.getUsernameById(user).then(username => {
+				roblox.getUsernameFromId(user).then(username => {
 					s += username + "\n";
 				}).finally(()=> {c++;});
 			}
@@ -324,7 +324,7 @@ module.exports.deny = function(message,username) {
 	if (appChannelIds[guildIds[message.guild.id]] == null || appChannelIds[guildIds[message.guild.id]] != message.channel.id) return;
 	let roblox = Roblox.getRoblox();
 	if (username != null && username != "") {
-		roblox.getIdByUsername(username).then(userId => {
+		roblox.getIdFromUsername(username).then(userId => {
 			let div = guildIds[message.guild.id];
 			let groupId = groupIds[div];
 			canUserApply(userId,div).then(canApply => {
@@ -347,7 +347,7 @@ module.exports.accept = function(message,username) {
 	if (appChannelIds[guildIds[message.guild.id]] == null || appChannelIds[guildIds[message.guild.id]] != message.channel.id) return;
 	let roblox = Roblox.getRoblox();
 	if (username != null && username != "") {
-		roblox.getIdByUsername(username).then(userId => {
+		roblox.getIdFromUsername(username).then(userId => {
 			let div = guildIds[message.guild.id];
 			let groupId = groupIds[div];
 			canUserApply(userId,div).then(canApply => {
