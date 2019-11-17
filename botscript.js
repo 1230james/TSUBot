@@ -36,9 +36,8 @@ bot.on('ready', () => {
 
 // Periodic login status check
 const timer = nodeSchedule.scheduleJob("00 * * * *",function() { // "00 * * * *" = Every hour at 0th minute
-	let roblox = Roblox.getRoblox();
 	let d = new Date();
-	roblox.setStatus("Verified online at " + d.toUTCString());
+	Roblox.setStatus("Verified online at " + d.toUTCString());
 });
 
 bot.on('message', (message) => { //When the bot is on, do this stuff
