@@ -6,25 +6,52 @@ const log = (msg) => { // Console log w/ timestamp
 		console.log(`[TSUBot ${moment().format("MM-DD-YYYY HH:mm:ss")}] ${msg}`);
 	};
 const config = require("../config.json");
-const bloxy = require("bloxy");
-const roblox = new bloxy();
-roblox.login({cookie: config.roblox.cookie});
+const roblox = require("noblox.js");
+roblox.cookieLogin(config.roblox.cookie);
+setStatus("Verified online at " + (new Date()).toUTCString());
 
 // Internal Libraries
 const DiscFunc = require("./DiscFunctions.js");
-const GetGroupsRanks = require("./GetGroupsRanks.js");
+//const GetGroupsRanks = require("./GetGroupsRanks.js");
 
-// ================================================
+// Set status
+function setStatus(msg) {
+    roblox.http({
+        url: "https://www.roblox.com/home/updatestatus/",
+        options: {
+            method: "POST",
+            inputs: {
+                status: msg
+            },
+            json: true
+        }
+    }).then(function (res) {
+        if (res.statusCode === 200) {
+            return true
+        } else {
+            return false
+        }
+    });
+}
 
-// Get a copy of the Roblox client
+// ============================================================================
+
+// Get a reference to the Roblox client
 module.exports.getRoblox = function() {
 	return roblox;
 }
 
+// Set status
+module.exports.setStatus = function(msg) {
+    setStatus(msg);
+}
+
 // Get table with div ranks (mainly for role setting stuff in Verify)
+/*
 module.exports.getGroupsRanks = function(userid) {
 	return GetGroupsRanks.main(roblox,userid);
 }
+*/
 
 // Cookie Login
 module.exports.cookieLogin = function(_cookie,msg) {
@@ -33,15 +60,18 @@ module.exports.cookieLogin = function(_cookie,msg) {
 	DiscFunc.sendMessage(msg,"Got cookie - logging in...");
 	
 	try {
-		roblox.login({cookie: _cookie});
+		roblox.cookieLogin(config.roblox.cookie);
 		DiscFunc.sendMessage(msg,"Logged in!","Roblox is ready!");
 	} catch(err) {
-		DiscFunc.sendMessage(msg,"Something went wrong!","Cookie login error: " + err);
+		DiscFunc.sendMessage(msg,"Something went wrong!\n" + err,
+            "Cookie login error: " + err);
 	}
 }
 
 // 2FA - Not sure if it works
 module.exports.twoFactorAuth = function(code,msg) {
+    return;
+    /*
 	config.roblox.code = code;
 	DiscFunc.updateFile("config",config);
 	DiscFunc.sendMessage(msg,"Code accepted - restarting bot...");
@@ -50,8 +80,10 @@ module.exports.twoFactorAuth = function(code,msg) {
 	botStatus.status = 'invisible'
 	bot.user.setPresence(botStatus).catch(err => {log(err)}); 
 	throw "===== RESTARTING =====";
+    */
 }
 
+/*
 // Find player in group
 module.exports.findPlayerInGroup = function(userid, groupid) {
 	return new Promise(function(resolve, reject) {
@@ -114,3 +146,4 @@ module.exports.getJoinRequestFromPlayer = function(group,userid) {
 		}
 	});
 }
+*/

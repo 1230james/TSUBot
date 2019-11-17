@@ -362,55 +362,32 @@ module.exports.accept = function(message,username) {
 						return;
 					}
 					// If application found, accept join req
-					roblox.getGroup(groupId).then(g => {
-						try {
-							Roblox.getJoinRequestFromPlayer(g,userId).then(req => {
-								if (req) {
-									g.acceptJoinRequest(req.requestId).then(()=>{
-										// Set main group rank
-										Roblox.getGroupsRanks(userId).then(ranks => {
-											if (ranks.MAIN <= 50 && ranks.MAIN != 20) {
-												roblox.getGroup(groupIds.MAIN).then(mainGroup => {
-													let searchOptions = {rank: 0};
-													if (div == "SAF") searchOptions.rank = 50
-													else searchOptions.rank = 70;
-													// Apparently I have to get the role first to get the role id instead of using the rank value? that's dumb
-													mainGroup.getRole(searchOptions).then(role => {
-														mainGroup.setRank(userId,role.id).then(()=>{
-															/*markAsRead(userId,div);
-															DiscFunc.sendMessage(message,username + "'s application was accepted and has been accepted into the group!","Accepted " + username + " to " + div);*/
-														}).catch(err => {
-															DiscFunc.sendMessage(message,"Hey <@126516587258707969>, something went bad when trying to set their main group rank!\nMaybe check the cookie?\n\n" + err);
-														});
-													}).catch(err => {
-														DiscFunc.sendMessage(message,"Hey <@126516587258707969>, something went bad when trying to find the right rank!\n\n" + err);
-													});
-												}).catch(err => {
-													DiscFunc.sendMessage(message,"Hey <@126516587258707969>, something went bad when trying to find the main group!\n\n" + err);
-												});
-											}
-											markAsRead(userId,div);
-											DiscFunc.sendMessage(message,username + "'s application was accepted and been accepted into the group!","Accepted " + username + " to " + div);
-										}).catch(err => {
-											let m = "**Join request acceptance failed - please do it manually.**\n";
-											if (err.toString().indexOf("Status code: 400, status message: Bad Request") < 0) m += "<@126516587258707969> ";
-											DiscFunc.sendMessage(message,m + err);
-										});
-									}).catch(err => {
-										DiscFunc.sendMessage(message,"Error occurred when trying to accept join request.\n<@126516587258707969>, check the cookie!\n\n" + err,"Join req accept error: " + err);
-									});
-								} else {
-									DiscFunc.sendMessage(message,username + " did not send a join request.");
-								}
-							}).catch(err => {
-								DiscFunc.sendMessage(message,"Error occurred when trying to retrieve join request.\n<@126516587258707969>, check the cookie!\n\n" + err,"GetJoinRequests error: " + err);
-							});
-						} catch(err) {
-							DiscFunc.sendMessage(message,"Error occurred.\n<@126516587258707969>, check the cookie!\n\n" + err,"App accept error: " + err);
-						}
-					}).catch(err => {
-						DiscFunc.sendMessage(message, "An error occurred when trying to retrieve division group.\n" + err, err);
-					});
+                    try {
+                        roblox.handleJoinRequest(groupId, username, true).then(()=>{
+                            // Set main group rank
+                            roblox.getRankInGroup(groupId,userId).then(rank => {
+                                let mainGroupRank = 0;
+                                // Applying to not SAF
+                                if (rank <= 50 && div != "SAF") mainGroupRank = 70;
+                                // Applying to SAF
+                                else if (rank < 50 && div == "SAF") mainGroupRank = 50;
+                                if (mainGroupRank > 0) {
+                                    roblox.setRank(groupIds.MAIN,userId,mainGroupRank);
+                                }
+                                
+                                // Mark app as read
+                                markAsRead(userId,div);
+                                DiscFunc.sendMessage(message,username + "'s application was accepted and been accepted into the group!","Accepted " + username + " to " + div);
+                            }).catch(err => {
+                                DiscFunc.sendMessage(message,"Error occurred when trying to obtain main group rank.\n<@126516587258707969>\n" + err,"Join req accept error: " + err);
+                            });
+                        }).catch(err => {
+                            DiscFunc.sendMessage(message,"Error occurred when trying to accept join request.\n<@126516587258707969>\n" + err,
+                            "Join req accept error: " + err);
+                        });
+                    } catch(err) {
+                        DiscFunc.sendMessage(message,username + " did not send a join request.\nUsernames are *case-sensitive.* Did you type in the name correctly?");
+                    }
 				}).catch(err => {
 					DiscFunc.sendMessage(message, "An error occurred while trying to determine prisoner status.\n" + err, err);
 				});

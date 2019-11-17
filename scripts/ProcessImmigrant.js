@@ -36,70 +36,53 @@ module.exports.main = function(message) {
 			roblox.getIdByUsername(username).then(userId => {
 				mlog("Got UserId " + userId);
 				if (userId) {
-					roblox.getGroup(4396304).then(mainGroup => {
-						mlog("Got main group");
-						Roblox.getGroupsRanks(userId).then(ranks => {
-							mlog("Got group ranks");
-							if (ranks.MAIN == 10) { // If their main group rank is Foreign Immigrant
-								TrelloFunc.getStatus(userId).then(results => {
-									mlog("Got status");
-									let isDC = results[0];
-									let isPrisoner = results[1];
-									let searchOptions = {rank: 0};
-									if (isPrisoner) { searchOptions.rank = 20; }
-									else { if (isDC) { searchOptions.rank = 40; }
-									else { searchOptions.rank = 30; } }
-									// Apparently I have to get the role first to get the role id instead of using the rank value? that's dumb
-									mainGroup.getRole(searchOptions).then(role => {
-										mlog("Got role");
-										mainGroup.setRank(userId,role.id).then(()=>{
-											message.react("✅");
-										}).catch(err => {
-											if (err.hasOwnProperty("message") && err.message.includes("options.uri is a required argument")) {
-												DiscFunc.sendMessage(message,"/ Something went wrong for some reason.\n" + message.author + ", post the name again, please.");
-											} else {
-												DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to set their main group rank!\nMaybe check the cookie?\n\n" + err);
-												message.react("🛠");
-											}
-										}).finally(()=>{
-											clockReaction.remove();
-										});
-									}).catch(err => {
-										if (err.hasOwnProperty("message") && err.message.includes("read ECONNRESET")) {
-											DiscFunc.sendMessage(message,"/ Something went wrong for some reason.\n" + message.author + ", post the name again, please.");
-										} else {
-											DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to get the main group ranks!\n\n" + err);
-											message.react("🛠");
-											clockReaction.remove();
-										}
-									});
-								}).catch(err => {
-									DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to determine DC status!\n\n" + err);
-									message.react("🛠");
-									clockReaction.remove();
-								});
-							} else {
-								clockReaction.remove();
-								if (ranks.MAIN == 0 || ranks.MAIN == null) {
-									message.react("🖕");
-								} else {
-									message.react("❌");
-								}
-							}
-						}).catch(err => {
-							if (err.hasOwnProperty("message") && err.message.includes("read ECONNRESET")) {
-								DiscFunc.sendMessage(message,"/ Something went wrong for some reason.\n" + message.author + ", post the name again, please.");
-							} else {
-								DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to get the main group ranks!\n\n" + err);
-								message.react("🛠");
-								clockReaction.remove();
-							}
-						});
-					}).catch(err => {
-						DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to find the main group!\n\n" + err);
-						message.react("🛠");
-						clockReaction.remove();
-					});
+                    roblox.getRankInGroup(4396304,userId).then(rank => {
+                        mlog("Got group rank");
+                        if (rank == 10) { // If their main group rank is Foreign Immigrant
+                            TrelloFunc.getStatus(userId).then(results => {
+                                mlog("Got status");
+                                let isDC = results[0];
+                                let isPrisoner = results[1];
+                                let searchOptions = {rank: 0};
+                                let groupRank = 0;
+                                if (isPrisoner) { groupRank = 20; }
+                                else { if (isDC) { groupRank = 40; }
+                                else { groupRank = 30; } }
+                                
+                                roblox.setRank(groupIds.MAIN,userId,mainGroupRank).then(()=>{
+                                    message.react("✅");
+                                }).catch(err => {
+                                    if (err.hasOwnProperty("message") && err.message.includes("options.uri is a required argument")) {
+                                        DiscFunc.sendMessage(message,"/ Something went wrong for some reason.\n" + message.author + ", post the name again, please.");
+                                    } else {
+                                        DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to set their main group rank!\nMaybe check the cookie?\n\n" + err);
+                                        message.react("🛠");
+                                    }
+                                }).finally(()=>{
+                                    clockReaction.remove();
+                                });
+                            }).catch(err => {
+                                DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to determine DC status!\n\n" + err);
+                                message.react("🛠");
+                                clockReaction.remove();
+                            });
+                        } else {
+                            clockReaction.remove();
+                            if (rank == 0 || rank == null) {
+                                message.react("🖕");
+                            } else {
+                                message.react("❌");
+                            }
+                        }
+                    }).catch(err => {
+                        if (err.hasOwnProperty("message") && err.message.includes("read ECONNRESET")) {
+                            DiscFunc.sendMessage(message,"/ Something went wrong for some reason.\n" + message.author + ", post the name again, please.");
+                        } else {
+                            DiscFunc.sendMessage(message,"/ Hey <@126516587258707969>, something went bad when trying to get the main group ranks!\n\n" + err);
+                            message.react("🛠");
+                            clockReaction.remove();
+                        }
+                    });
 				} else {
 					message.react("❓");
 					clockReaction.remove();

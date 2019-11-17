@@ -13,11 +13,10 @@ var log = (msg) => { // Console timestamp
 const request = require('request');
 const nodeSchedule = require('node-schedule');
 
-
 // My Scripts + Files
 const DiscFunc = require("./scripts/DiscFunctions.js");
 const Roblox = require("./scripts/RobloxFunctions.js");
-const Verify = require("./scripts/Verify.js");
+//const Verify = require("./scripts/Verify.js");
 const AcceptApp = require("./scripts/AcceptApplication.js");
 const ProcessImmigrant = require("./scripts/ProcessImmigrant.js");
 const database = require("./database.json");
@@ -39,12 +38,7 @@ bot.on('ready', () => {
 const timer = nodeSchedule.scheduleJob("00 * * * *",function() { // "00 * * * *" = Every hour at 0th minute
 	let roblox = Roblox.getRoblox();
 	let d = new Date();
-	roblox.changeStatus("Verified online at " + d.toUTCString()).then(() => {
-		log("Updated login status");
-	}).catch(err => {
-		bot.channels.get('554344300947832872').send("<@126516587258707969> Error while checking login status: " + err);
-		log(err);
-	});
+	roblox.setStatus("Verified online at " + d.toUTCString());
 });
 
 bot.on('message', (message) => { //When the bot is on, do this stuff
@@ -141,11 +135,13 @@ if (input.startsWith(prefix + "RESTART")) {
 }
 
 // Verify
+/*
 if (input == prefix + "VERIFYTEST") {
 	if (message.author.id != "126516587258707969") return;
 	DiscFunc.sendMessage(message,"Verify test");
 	Verify.main(message);
 }
+*/
 
 });
 

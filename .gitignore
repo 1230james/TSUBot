@@ -1,3 +1,6 @@
+# Batch scripts
+**/*.bat
+
 # Bot Config
 **/config.json
 **/GoogleAPIAuth.json
