@@ -382,8 +382,12 @@ module.exports.accept = function(message,username) {
                                 DiscFunc.sendMessage(message,"Error occurred when trying to obtain main group rank.\n<@126516587258707969>\n" + err,"Join req accept error: " + err);
                             });
                         }).catch(err => {
-                            DiscFunc.sendMessage(message,"Error occurred when trying to accept join request.\n<@126516587258707969>\n" + err,
-                            "Join req accept error: " + err);
+                            if (err.message.includes("No join request was found with that username")) {
+                                DiscFunc.sendMessage(message,username + " did not send a join request.\nUsernames are *case-sensitive.* Did you type in the name correctly?");
+                            } else {
+                                DiscFunc.sendMessage(message,"Error occurred when trying to accept join request.\n<@126516587258707969>\n" + err,
+                                "Join req accept error: " + err);
+                            };
                         });
                     } catch(err) {
                         DiscFunc.sendMessage(message,username + " did not send a join request.\nUsernames are *case-sensitive.* Did you type in the name correctly?");
