@@ -56,7 +56,7 @@ const appChannelIds = {
 	KGB: '578294849002930207',
 	RG:  null,
 	SPE: null,
-	MOC: null,
+	MOC: '647054115200827406',
 	MOJ: '617481829901008899',
 	BIO: null
 }
