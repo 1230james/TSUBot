@@ -365,7 +365,7 @@ module.exports.accept = function(message,username) {
                     try {
                         roblox.handleJoinRequest(groupId, username, true).then(()=>{
                             // Set main group rank
-                            roblox.getRankInGroup(groupId,userId).then(rank => {
+                            roblox.getRankInGroup(groupIds.MAIN,userId).then(rank => {
                                 let mainGroupRank = 0;
                                 // Applying to not SAF
                                 if (rank <= 50 && div != "SAF") mainGroupRank = 70;
