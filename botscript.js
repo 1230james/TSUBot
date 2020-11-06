@@ -40,20 +40,20 @@ for (let file of utilityFiles) {
 // Stuff to run once bot is initially online
 bot.on("ready", () => {
     // Set status
-	let presenceData = {};
-	if (config.devMode) {
-		presenceData.status = "idle";
-		presenceData.activity = {
-			type: "PLAYING",
-			name: "Development Mode - I may be dysfunctional"
-		}
-	} else {
-		presenceData.status = "online";
-		presenceData.activity = {
-			type: "PLAYING",
-			name: "City of Volinsk, Soviet Border"
-		}
-	}
+    let presenceData = {};
+    if (config.devMode) {
+        presenceData.status = "idle";
+        presenceData.activity = {
+            type: "PLAYING",
+            name: "Development Mode - I may be dysfunctional"
+        }
+    } else {
+        presenceData.status = "online";
+        presenceData.activity = {
+            type: "PLAYING",
+            name: "City of Volinsk, Soviet Border"
+        }
+    }
     bot.user.setPresence(presenceData).catch(err => { console.log(err) });
     
     // Set avatar
@@ -61,10 +61,10 @@ bot.on("ready", () => {
     
     // Print to console
     console.log("Discord is ready!");
-	
-	// Login to Roblox
-	// placeholder
-	// console.log("Roblox is ready!");
+    
+    // Login to Roblox
+    // placeholder
+    // console.log("Roblox is ready!");
 });
 
 // =============================================================================
