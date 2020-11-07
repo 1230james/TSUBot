@@ -2,13 +2,17 @@
 "use strict";
 
 // Libraries & Important Variables
-const config = require("./config.json");
-const fs = require("fs");
+const fs            = require("fs");
+const Roblox        = require("noblox.js");
+const Discord       = require("discord.js");
+const node-schedule = require("node-schedule");
 
-const Discord = require("discord.js");
-const bot = new Discord.Client();
-bot.cmds = new Map();
-bot.util = new Map();
+var config = require("./config.json");
+const bot  = new Discord.Client();
+bot.cmds   = new Map();
+bot.util   = new Map();
+
+// =====================================================================================================================
 
 // Load in all the commands
 const commandFiles = fs.readdirSync(__dirname + "/scripts/cmds")
@@ -32,10 +36,46 @@ for (let file of utilityFiles) {
     bot.util.set(util.name, util);
 }
 
-// Misc. Functions
-// placeholder
+// =====================================================================================================================
 
-// =============================================================================
+// Misc. Functions
+// Log in to Roblox with the cookie passed.
+function robloxLogin(cookie) { // wow this looks kinda messy
+    (new Promise((resolve, reject) => {
+        try {
+            Roblox.setCookie(cookie);
+        } catch(err) {
+            reject(err);
+        }
+        resolve();
+    })).then(() => {
+        // Signs of life
+        bot.util.setRobloxStatus(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
+            if (res.statusCode == 200) {
+                bot.util.glog("Roblox is ready!");
+            } else {
+                bot.util.glog("Setting Roblox status failed - returned " + res.statusCode);
+            }
+        }).catch(err => {
+            console.err(err);
+        });
+        
+        // Save cookie
+        if (!config.roblox) {
+            config.roblox = {};
+        }
+        config.roblox.cookie = cookie;
+        fs.writeFile("config.json", JSON.stringify(config, null, 4), (err) => {
+            if (err) {
+                console.error("Error when writing cookie to config file.\n" + err);
+            }
+        });
+    }).catch(err => {
+        console.error(err);
+    });
+}
+
+// =====================================================================================================================
 
 // Stuff to run once bot is initially online
 bot.on("ready", () => {
@@ -60,14 +100,17 @@ bot.on("ready", () => {
         // TODO
     
     // Print to console
-    console.log("Discord is ready!");
+    bot.util.glog("Discord is ready!");
     
     // Login to Roblox
-    // placeholder
-    // console.log("Roblox is ready!");
+    if (config.roblox && config.roblox.cookie) {
+        robloxLogin(config.roblox.cookie);
+    } else {
+        bot.util.glog("Roblox is NOT ready - could not find a cookie in the config file!");
+    }
 });
 
-// =============================================================================
+// =====================================================================================================================
 
 // Stuff to run whenever a message is sent
 bot.on("message", function(message) {
@@ -92,7 +135,7 @@ function processCommand(prefix, message) {
         let prefixAndCmd = prefix + cmd;
         if (input.substring(0, prefixAndCmd.length) == prefixAndCmd) {
             if (canRunCommand(prefixAndCmd, input, cmdObj)) {
-                cmdObj.func(message);
+                cmdObj.func(message, bot.util);
             }
         }
     });
@@ -117,7 +160,7 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
     }
 }
 
-// =============================================================================
+// =====================================================================================================================
 
 // Login to Discord
 bot.login(config.auth);
