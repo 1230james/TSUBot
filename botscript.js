@@ -45,10 +45,10 @@ for (let file of utilityFiles) {
 function runAfterSetCookie(cookie) {
     // Signs of life
     bot.util.get("setRobloxStatus").func(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
-        if (res.statusCode == 200) {
+        if (res.status) {
             bot.util.get("glog").func("Roblox is ready!");
         } else {
-            bot.util.get("glog").func("Setting Roblox status failed - returned " + res.statusCode);
+            bot.util.get("glog").func("Setting Roblox status failed: " + res.errors[0].message);
         }
     }).catch(err => {
         bot.util.get("glog").func("Error occurred when trying to set Roblox status.");
@@ -71,11 +71,13 @@ function robloxLogin(cookie) {
         try {
             Roblox.setCookie(cookie).then(() => {
                 runAfterSetCookie(cookie);
+                resolve();
+            }).catch(err => {
+                return reject(err);
             });
         } catch(err) {
-            reject(err);
+            return reject(err);
         }
-        resolve();
     })).catch(err => {
         bot.util.get("glog").func("Error occurred when trying to call Roblox.setCookie()");
         console.error(err);
@@ -175,10 +177,10 @@ bot.login(config.auth);
 // Hourly status update
 const statusUpdateJob = nodeSchedule.scheduleJob("00 * * * *", () => { // "00 * * * *" = Every hour at 0th minute
 	bot.util.get("setRobloxStatus").func(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
-        if (res.statusCode == 200) {
+        if (res.status) {
             bot.util.get("glog").func("Updated online timestamp on Roblox status.");
         } else {
-            bot.util.get("glog").func("Setting Roblox status failed - returned " + res.statusCode);
+            bot.util.get("glog").func("Setting Roblox status failed: " + res.errors[0].message);
         }
     }).catch(err => {
         throw err;
