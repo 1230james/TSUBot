@@ -5,12 +5,13 @@
 const fs           = require("fs");
 const Roblox       = require("noblox.js");
 const Discord      = require("discord.js");
-const nodeSchedule = require("node-schedule");
 
-var config = require("./config.json");
-const bot  = new Discord.Client();
-bot.cmds   = new Map();
-bot.util   = new Map();
+var config      = require("./config.json");
+const startDate = (new Date()).toISOString().substring(0, 10);
+
+const bot = new Discord.Client();
+bot.cmds  = new Map();
+bot.util  = new Map();
 
 // =====================================================================================================================
 
@@ -44,7 +45,7 @@ for (let file of utilityFiles) {
 // Jesus christ this is messy as hell
 function runAfterSetCookie(cookie) {
     // Signs of life
-    bot.util.get("setRobloxStatus").func(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
+    bot.util.get("setRobloxStatus").func(Roblox, "Logged in on " + startDate + "; online for 0 hours").then(res => {
         if (res.status) {
             bot.util.get("glog").func("Roblox is ready!");
         } else {
@@ -175,14 +176,17 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
 bot.login(config.auth);
 
 // Hourly status update
-const statusUpdateJob = nodeSchedule.scheduleJob("00 * * * *", () => { // "00 * * * *" = Every hour at 0th minute
-	bot.util.get("setRobloxStatus").func(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
+var hoursOnline = 0;
+setInterval(function() {
+    hoursOnline++;
+    bot.util.get("setRobloxStatus").func(Roblox, "Logged in on " + startDate + "; online for " + hoursOnline + " hours")
+    .then(res => {
         if (res.status) {
-            bot.util.get("glog").func("Updated online timestamp on Roblox status.");
+            bot.util.get("glog").func("Updated online time on Roblox status.");
         } else {
             bot.util.get("glog").func("Setting Roblox status failed: " + res.errors[0].message);
         }
     }).catch(err => {
         throw err;
     });
-});
+}, 3600000); // every 1 hour
