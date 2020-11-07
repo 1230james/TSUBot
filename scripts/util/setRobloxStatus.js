@@ -26,7 +26,7 @@ function foo(resolve, reject, Roblox, statusMsg) {
 }
 
 module.exports = {
-    name: "setStatus",
+    name: "setRobloxStatus",
     /** Sets the status on the Roblox account the bot is currently logged in as to `statusMsg`.
       * @param Roblox `noblox.js` module. Require it from the main script and pass it in.
       * @param statusMsg The message to set the user status to. */

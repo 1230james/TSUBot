@@ -2,10 +2,10 @@
 "use strict";
 
 // Libraries & Important Variables
-const fs            = require("fs");
-const Roblox        = require("noblox.js");
-const Discord       = require("discord.js");
-const node-schedule = require("node-schedule");
+const fs           = require("fs");
+const Roblox       = require("noblox.js");
+const Discord      = require("discord.js");
+const nodeSchedule = require("node-schedule");
 
 var config = require("./config.json");
 const bot  = new Discord.Client();
@@ -39,38 +39,45 @@ for (let file of utilityFiles) {
 // =====================================================================================================================
 
 // Misc. Functions
+
 // Log in to Roblox with the cookie passed.
-function robloxLogin(cookie) { // wow this looks kinda messy
+// Jesus christ this is messy as hell
+function runAfterSetCookie(cookie) {
+    // Signs of life
+    bot.util.get("setRobloxStatus").func(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
+        if (res.statusCode == 200) {
+            bot.util.get("glog").func("Roblox is ready!");
+        } else {
+            bot.util.get("glog").func("Setting Roblox status failed - returned " + res.statusCode);
+        }
+    }).catch(err => {
+        bot.util.get("glog").func("Error occurred when trying to set Roblox status.");
+        console.error(err);
+    });
+    
+    // Save cookie
+    if (!config.roblox) {
+        config.roblox = {};
+    }
+    config.roblox.cookie = cookie;
+    fs.writeFile("config.json", JSON.stringify(config, null, 4), (err) => {
+        if (err) {
+            throw err;
+        }
+    });
+}
+function robloxLogin(cookie) {
     (new Promise((resolve, reject) => {
         try {
-            Roblox.setCookie(cookie);
+            Roblox.setCookie(cookie).then(() => {
+                runAfterSetCookie(cookie);
+            });
         } catch(err) {
             reject(err);
         }
         resolve();
-    })).then(() => {
-        // Signs of life
-        bot.util.setRobloxStatus(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
-            if (res.statusCode == 200) {
-                bot.util.glog("Roblox is ready!");
-            } else {
-                bot.util.glog("Setting Roblox status failed - returned " + res.statusCode);
-            }
-        }).catch(err => {
-            console.err(err);
-        });
-        
-        // Save cookie
-        if (!config.roblox) {
-            config.roblox = {};
-        }
-        config.roblox.cookie = cookie;
-        fs.writeFile("config.json", JSON.stringify(config, null, 4), (err) => {
-            if (err) {
-                console.error("Error when writing cookie to config file.\n" + err);
-            }
-        });
-    }).catch(err => {
+    })).catch(err => {
+        bot.util.get("glog").func("Error occurred when trying to call Roblox.setCookie()");
         console.error(err);
     });
 }
@@ -100,13 +107,13 @@ bot.on("ready", () => {
         // TODO
     
     // Print to console
-    bot.util.glog("Discord is ready!");
+    bot.util.get("glog").func("Discord is ready!");
     
     // Login to Roblox
     if (config.roblox && config.roblox.cookie) {
         robloxLogin(config.roblox.cookie);
     } else {
-        bot.util.glog("Roblox is NOT ready - could not find a cookie in the config file!");
+        bot.util.get("glog").func("Roblox is NOT ready - could not find a cookie in the config file!");
     }
 });
 
@@ -167,13 +174,13 @@ bot.login(config.auth);
 
 // Hourly status update
 const statusUpdateJob = nodeSchedule.scheduleJob("00 * * * *", () => { // "00 * * * *" = Every hour at 0th minute
-	bot.util.setRobloxStatus(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
+	bot.util.get("setRobloxStatus").func(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
         if (res.statusCode == 200) {
-            bot.util.glog("Updated online timestamp on Roblox status.");
+            bot.util.get("glog").func("Updated online timestamp on Roblox status.");
         } else {
-            bot.util.glog("Setting Roblox status failed - returned " + res.statusCode);
+            bot.util.get("glog").func("Setting Roblox status failed - returned " + res.statusCode);
         }
     }).catch(err => {
-        console.err(err);
+        throw err;
     });
 });
