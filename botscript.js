@@ -164,3 +164,16 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
 
 // Login to Discord
 bot.login(config.auth);
+
+// Hourly status update
+const statusUpdateJob = nodeSchedule.scheduleJob("00 * * * *", () => { // "00 * * * *" = Every hour at 0th minute
+	bot.util.setRobloxStatus(Roblox, "Verified online at " + (new Date()).toUTCString()).then(res => {
+        if (res.statusCode == 200) {
+            bot.util.glog("Updated online timestamp on Roblox status.");
+        } else {
+            bot.util.glog("Setting Roblox status failed - returned " + res.statusCode);
+        }
+    }).catch(err => {
+        console.err(err);
+    });
+});
