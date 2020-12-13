@@ -6,7 +6,8 @@ const fs           = require("fs");
 const Roblox       = require("noblox.js");
 const Discord      = require("discord.js");
 
-var config      = require("./config.json");
+const config    = require("./config.json");
+var   keys      = require("./keys.json");
 const startDate = (new Date()).toISOString().substring(0, 10);
 
 const bot = new Discord.Client();
@@ -57,11 +58,8 @@ function runAfterSetCookie(cookie) {
     });
     
     // Save cookie
-    if (!config.roblox) {
-        config.roblox = {};
-    }
-    config.roblox.cookie = cookie;
-    fs.writeFile("config.json", JSON.stringify(config, null, 4), (err) => {
+    keys.roblox = cookie;
+    fs.writeFile("keys.json", JSON.stringify(keys, null, 4), (err) => {
         if (err) {
             throw err;
         }
@@ -113,10 +111,10 @@ bot.on("ready", () => {
     bot.util.get("glog").func("Discord is ready!");
     
     // Login to Roblox
-    if (config.roblox && config.roblox.cookie) {
-        robloxLogin(config.roblox.cookie);
+    if (keys.roblox) {
+        robloxLogin(keys.roblox);
     } else {
-        bot.util.get("glog").func("Roblox is NOT ready - could not find a cookie in the config file!");
+        bot.util.get("glog").func("Roblox is NOT ready - could not find a cookie in the keys file!");
     }
 });
 
@@ -173,7 +171,7 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
 // =====================================================================================================================
 
 // Login to Discord
-bot.login(config.auth);
+bot.login(keys.auth);
 
 // Hourly status update
 var hoursOnline = 0;

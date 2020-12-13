@@ -1,7 +1,6 @@
 # Bot Config
-**/config.json
+**/keys.json
 **/GoogleAPIAuth.json
-cookie
 
 # Temp Files
 **/*~
