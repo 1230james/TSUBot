@@ -12,7 +12,10 @@ const startDate = (new Date()).toISOString().substring(0, 10);
 
 const bot = new Discord.Client();
 bot.cmds  = {};
-bot.util  = {};
+bot.util  = {
+    "Roblox": Roblox,
+    "config": config
+};
 
 // =====================================================================================================================
 
