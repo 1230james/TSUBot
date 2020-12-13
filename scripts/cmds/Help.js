@@ -1,16 +1,13 @@
 // Help/Commands list
 "use strict";
 
-// Libraries
-const log = require(__dirname + "/../util/Log.js").func;
-
 // ============================================================================
 
 module.exports = {
     command: "help",
     aliases: ["cmds", "commands"],
     hasArgs: false,
-    func: function(message) {
+    func: function(message, util) {
         let cmds = `__**TSUBot**__ by 1230james
 
 __**Public Commands**__
@@ -31,6 +28,6 @@ __**Application Commands**__
             // For some reason message.author doesn't parse into a mention? I think it's a bug based on the discord.js docs
         }
         message.author.send(cmds);
-        log(message, "Sent commands to " + message.author.username);
+        util.log(message, "Sent commands to " + message.author.username);
     }
 }

@@ -2,8 +2,6 @@
 "use strict";
 
 // Libraries
-// Require stuff needed for the execution of this command here
-const log = require(__dirname + "/../util/Log.js").func;
 
 // ============================================================================
 
@@ -18,7 +16,7 @@ module.exports = {
                     // the main script will match the command using the ==
                     // operator. Else, it will use a more complex comparison
                     // involving String.startsWith().
-    func: function(message) {
+    func: function(message, util) {
         // code to run when command runs
     }
 }

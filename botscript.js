@@ -11,8 +11,8 @@ var   keys      = require("./keys.json");
 const startDate = (new Date()).toISOString().substring(0, 10);
 
 const bot = new Discord.Client();
-bot.cmds  = new Map();
-bot.util  = new Map();
+bot.cmds  = {};
+bot.util  = {};
 
 // =====================================================================================================================
 
@@ -21,11 +21,11 @@ const commandFiles = fs.readdirSync(__dirname + "/scripts/cmds")
     .filter(file => file.endsWith(".js"));
 for (let file of commandFiles) {
     let cmd = require(__dirname + "/scripts/cmds/" + file);
-    bot.cmds.set(cmd.command, cmd);
+    bot.cmds[cmd.command] = cmd;
     
     if (cmd.aliases != null) { // Type safety? What's that? :^)
         for (let alias of cmd.aliases) { // I love you pass by reference
-            bot.cmds.set(alias, bot.cmds.get(cmd.command)); 
+            bot.cmds[alias] = bot.cmds[cmd.command];
         }
     }
 }
@@ -35,7 +35,7 @@ const utilityFiles = fs.readdirSync(__dirname + "/scripts/util")
     .filter(file => file.endsWith(".js"));
 for (let file of utilityFiles) {
     let util = require(__dirname + "/scripts/util/" + file);
-    bot.util.set(util.name, util);
+    bot.util[util.name] = util.func;
 }
 
 // =====================================================================================================================
@@ -46,14 +46,14 @@ for (let file of utilityFiles) {
 // Jesus christ this is messy as hell
 function runAfterSetCookie(cookie) {
     // Signs of life
-    bot.util.get("setRobloxStatus").func(Roblox, "Logged in on " + startDate + "; online for 0 hours").then(res => {
+    bot.util.setRobloxStatus(Roblox, "Logged in on " + startDate + "; online for 0 hours").then(res => {
         if (res.status) {
-            bot.util.get("glog").func("Roblox is ready!");
+            bot.util.glog("Roblox is ready!");
         } else {
-            bot.util.get("glog").func("Setting Roblox status failed: " + res.errors[0].message);
+            bot.util.glog("Setting Roblox status failed: " + res.errors[0].message);
         }
     }).catch(err => {
-        bot.util.get("glog").func("Error occurred when trying to set Roblox status.");
+        bot.util.glog("Error occurred when trying to set Roblox status.");
         console.error(err);
     });
     
@@ -78,7 +78,7 @@ function robloxLogin(cookie) {
             return reject(err);
         }
     })).catch(err => {
-        bot.util.get("glog").func("Error occurred when trying to call Roblox.setCookie()");
+        bot.util.glog("Error occurred when trying to call Roblox.setCookie()");
         console.error(err);
     });
 }
@@ -108,13 +108,13 @@ bot.on("ready", () => {
         // TODO
     
     // Print to console
-    bot.util.get("glog").func("Discord is ready!");
+    bot.util.glog("Discord is ready!");
     
     // Login to Roblox
     if (keys.roblox) {
         robloxLogin(keys.roblox);
     } else {
-        bot.util.get("glog").func("Roblox is NOT ready - could not find a cookie in the keys file!");
+        bot.util.glog("Roblox is NOT ready - could not find a cookie in the keys file!");
     }
 });
 
@@ -138,15 +138,15 @@ bot.on("message", function(message) {
 
 function processCommand(prefix, message) {
     let input = message.content.toLowerCase();
-    bot.cmds.forEach(function(cmdObj, cmd) {
+    for (let cmd in bot.cmds) {
         // Match command
         let prefixAndCmd = prefix + cmd;
         if (input.substring(0, prefixAndCmd.length) == prefixAndCmd) {
-            if (canRunCommand(prefixAndCmd, input, cmdObj)) {
-                cmdObj.func(message, bot.util);
+            if (canRunCommand(prefixAndCmd, input, bot.cmds[cmd])) {
+                bot.cmds[cmd].func(message, bot.util);
             }
         }
-    });
+    };
 }
 
 function canRunCommand(prefixAndCmd, input, cmdObj) {
@@ -171,18 +171,18 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
 // =====================================================================================================================
 
 // Login to Discord
-bot.login(keys.auth);
+bot.login(keys.discord);
 
 // Hourly status update
 var hoursOnline = 0;
 setInterval(function() {
     hoursOnline++;
-    bot.util.get("setRobloxStatus").func(Roblox, "Logged in on " + startDate + "; online for " + hoursOnline + " hours")
+    bot.util.setRobloxStatus(Roblox, "Logged in on " + startDate + "; online for " + hoursOnline + " hours")
     .then(res => {
         if (res.status) {
-            bot.util.get("glog").func("Updated online time on Roblox status.");
+            bot.util.glog("Updated online time on Roblox status.");
         } else {
-            bot.util.get("glog").func("Setting Roblox status failed: " + res.errors[0].message);
+            bot.util.glog("Setting Roblox status failed: " + res.errors[0].message);
         }
     }).catch(err => {
         throw err;
