@@ -7,7 +7,7 @@ module.exports = {
     command: "help",
     aliases: ["cmds", "commands"],
     hasArgs: false,
-    func: function(message, util) {
+    func: function(message, args, util) {
         let cmds = `__**TSUBot**__ by 1230james
 
 __**Public Commands**__

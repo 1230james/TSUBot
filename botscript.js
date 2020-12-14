@@ -19,6 +19,14 @@ bot.util  = {
 
 // =====================================================================================================================
 
+// Load in utilities
+const utilityFiles = fs.readdirSync(__dirname + "/scripts/util")
+    .filter(file => file.endsWith(".js"));
+for (let file of utilityFiles) {
+    let util = require(__dirname + "/scripts/util/" + file);
+    bot.util[util.name] = util.func;
+}
+
 // Load in all the commands
 const commandFiles = fs.readdirSync(__dirname + "/scripts/cmds")
     .filter(file => file.endsWith(".js"));
@@ -31,14 +39,6 @@ for (let file of commandFiles) {
             bot.cmds[alias] = bot.cmds[cmd.command];
         }
     }
-}
-
-// Load in utilities
-const utilityFiles = fs.readdirSync(__dirname + "/scripts/util")
-    .filter(file => file.endsWith(".js"));
-for (let file of utilityFiles) {
-    let util = require(__dirname + "/scripts/util/" + file);
-    bot.util[util.name] = util.func;
 }
 
 // =====================================================================================================================
@@ -146,7 +146,8 @@ function processCommand(prefix, message) {
         let prefixAndCmd = prefix + cmd;
         if (input.substring(0, prefixAndCmd.length) == prefixAndCmd) {
             if (canRunCommand(prefixAndCmd, input, bot.cmds[cmd])) {
-                bot.cmds[cmd].func(message, bot.util);
+                let args = input.substring(prefixAndCmd.length + 1).split(" ");
+                bot.cmds[cmd].func(message, args, bot.util);
             }
         }
     };

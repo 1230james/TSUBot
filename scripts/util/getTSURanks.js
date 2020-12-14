@@ -1,8 +1,8 @@
 // Get a table of TSU ranks
 
-var https = require("https");
+const https = require("https");
 
-// =============================================================================
+// =====================================================================================================================
 
 /** Takes in a Roblox UserID and retrieves the ranks of that user in every TSU group, then returns those ranks in
   * a table. The keys of the table returned will match those listed for the group IDs in `config.json`. Results are NOT
@@ -20,21 +20,21 @@ function main(Roblox, groupIDs, userID) {
         let t         = {};
         let groupKeys = {};
         let options   = {
-            "host":     "groups.roblox.com",
-            "path":     "/v2/users/" + userID + "/groups/roles",
+            "host":    "groups.roblox.com",
+            "path":    "/v2/users/" + userID + "/groups/roles",
             "headers": {
                 "Content-Type": "application/json"
             }
         };
         
-        // Fill groupKeys
+        // Fill groupKeys + t
         for (let key in groupIDs) {
             groupKeys[groupIDs[key]] = key;
+            t[key] = 0; // ok im not gonna horizontally align here
         }
         
         // Web request
         let req = https.request(options, (res) => {
-            console.log("ayooo");
             res.on("data", (chunk) => {
                 let data = JSON.parse(chunk).data;
                 
@@ -74,7 +74,7 @@ function getRank(groupObj) {
     return groupObj.role.rank;
 }
 
-// =============================================================================
+// =====================================================================================================================
 
 module.exports = {
     name: "getTSURanks",
