@@ -7,7 +7,7 @@ module.exports = {
     command: "help",
     aliases: ["cmds", "commands"],
     hasArgs: false,
-    func: function(message, args, util) {
+    func: function(message, args, bot) {
         let cmds = `__**TSUBot**__ by 1230james
 
 __**Public Commands**__
@@ -28,6 +28,6 @@ __**Application Commands**__
             // For some reason message.author doesn't parse into a mention? I think it's a bug based on the discord.js docs
         }
         message.author.send(cmds);
-        util.log(message, "Sent commands to " + message.author.username);
+        bot.util.log(message, "Sent commands to " + message.author.username);
     }
 }

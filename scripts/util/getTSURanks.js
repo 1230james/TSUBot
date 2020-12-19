@@ -1,4 +1,5 @@
 // Get a table of TSU ranks
+"use strict";
 
 const https = require("https");
 

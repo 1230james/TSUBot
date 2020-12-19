@@ -16,7 +16,7 @@ module.exports = {
                     // the main script will match the command using the ==
                     // operator. Else, it will use a more complex comparison
                     // involving String.startsWith().
-    func: function(message, args, util) {
+    func: function(message, args, bot) {
         // code to run when command runs
     }
 }

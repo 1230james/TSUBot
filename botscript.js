@@ -6,15 +6,14 @@ const fs           = require("fs");
 const Roblox       = require("noblox.js");
 const Discord      = require("discord.js");
 
-const config    = require("./config.json");
-var   keys      = require("./keys.json");
 const startDate = (new Date()).toISOString().substring(0, 10);
 
 const bot = new Discord.Client();
 bot.cmds  = {};
 bot.util  = {
     "Roblox": Roblox,
-    "config": config
+    "config": require("./config.json"),
+    "keys":   require("./keys.json")
 };
 
 // =====================================================================================================================
@@ -61,8 +60,8 @@ function runAfterSetCookie(cookie) {
     });
     
     // Save cookie
-    keys.roblox = cookie;
-    fs.writeFile("keys.json", JSON.stringify(keys, null, 4), (err) => {
+    bot.util.keys.roblox = cookie;
+    fs.writeFile("keys.json", JSON.stringify(bot.util.keys, null, 4), (err) => {
         if (err) {
             throw err;
         }
@@ -92,7 +91,7 @@ function robloxLogin(cookie) {
 bot.on("ready", () => {
     // Set status
     let presenceData = {};
-    if (config.devMode) {
+    if (bot.util.config.devMode) {
         presenceData.status = "idle";
         presenceData.activity = {
             type: "PLAYING",
@@ -114,8 +113,8 @@ bot.on("ready", () => {
     bot.util.glog("Discord is ready!");
     
     // Login to Roblox
-    if (keys.roblox) {
-        robloxLogin(keys.roblox);
+    if (bot.util.keys.roblox) {
+        robloxLogin(bot.util.keys.roblox);
     } else {
         bot.util.glog("Roblox is NOT ready - could not find a cookie in the keys file!");
     }
@@ -127,7 +126,8 @@ bot.on("ready", () => {
 bot.on("message", function(message) {
     // Prevent people who arent supposed to use the bot from using it
     if (message.author.bot) return;
-    if (config.devMode && message.author.id != "126516587258707969") return;
+    if (bot.util.config.devMode && message.author.id != "126516587258707969"
+        && message.author.id != "213116252401434625") return;
     
     // Passive stuff
     // Placeholder
@@ -147,7 +147,7 @@ function processCommand(prefix, message) {
         if (input.substring(0, prefixAndCmd.length) == prefixAndCmd) {
             if (canRunCommand(prefixAndCmd, input, bot.cmds[cmd])) {
                 let args = input.substring(prefixAndCmd.length + 1).split(" ");
-                bot.cmds[cmd].func(message, args, bot.util);
+                bot.cmds[cmd].func(message, args, bot);
             }
         }
     };
@@ -175,7 +175,7 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
 // =====================================================================================================================
 
 // Login to Discord
-bot.login(keys.discord);
+bot.login(bot.util.keys.discord);
 
 // Hourly status update
 var hoursOnline = 0;

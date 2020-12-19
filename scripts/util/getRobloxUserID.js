@@ -1,4 +1,12 @@
-// Get the Roblox UserID of a user based on their Discord user snowflake. Uses Bloxlink's verification database.
+// Get the Roblox UserID of a user based on their Discord user snowflake.
+"use strict";
+
+// Uses Bloxlink's verification database.
+// Only checks for a primary account and ignores any server-specific accounts. This is intentional as is part of an
+// effort to combat lazy attempts at using alts.
+
+// If you forked this bot and need server-specific account verification, the place you want to be editing is the
+// request(resolve, reject, options) function.
 
 const https       = require("https");
 const RateLimiter = require("limiter").RateLimiter;

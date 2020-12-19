@@ -1,4 +1,5 @@
 // Get a Roblox username based on a UserID.
+"use strict";
 
 const https = require("https");
 
