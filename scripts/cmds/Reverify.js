@@ -22,7 +22,7 @@ function main(message, args, bot) {
 
 module.exports = {
     command: "reverify",
-    aliases: [],
+    aliases: null,
     hasArgs: false,
     func:    main
 }

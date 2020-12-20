@@ -17,6 +17,13 @@ __**Public Commands**__
     • !getroles - Alias for \`verify\`.
 3. !reverify - Posts link to get verified on Bloxlink's verification system.
 
+__**Moderator Commands**__
+*Will only work for users with certain Discord permissions. Not for public use.*
+1. !update <user> [-force] - Runs the \`verify\` command on the specified user's behalf.
+    • Requires \`Administrator\` or \`Manage Roles\` permission.
+    • \`user\` can either be a Discord user ID, server nickname, or Discord username (no discriminator). The latter two are case insensitive.
+    • \`-force\`, if appended after the user, works the same way as \`verify -force\`.
+
 __**Application Commands**__
 *Will only work in application-reading channels. Not for public use.*
 1. !list - Lists all unprocessed applications.
