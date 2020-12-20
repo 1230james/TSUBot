@@ -73,7 +73,6 @@ function setResult(userID,list,result,index) {
             result = setResult(userID,dcListCards,result,0);
             trello.getCardsOnList(prisonerList.id).then(prisonerListCards => {
                 result = setResult(userID,prisonerListCards,result,1);
-                console.log(result);
                 return resolve(result);
             }).catch(err => {reject(err);});
         }).catch(err => {reject(err);});

@@ -20,6 +20,16 @@ function main(message, bot, userID) {
             let total    = Object.keys(guildIDs).length;
             
             for (let div in guildIDs) {
+                // Skip nicknames for KGB, RG, and Spets
+                switch(div) { // intriguing use case of switch statements imo
+                case "KGB":
+                case "RG":
+                case "SPE":
+                    count++;
+                    continue;
+                    break;
+                }
+                
                 // Fetch Guild object
                 bot.guilds.fetch(guildIDs[div]).then((guild) => {
                     // Get member

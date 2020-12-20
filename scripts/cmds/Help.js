@@ -12,9 +12,10 @@ module.exports = {
 
 __**Public Commands**__
 1. !help - Displays all commands and bot-related info in a direct message.
-2. !verify [-force] - Fetches data from Roblox to update your name and roles in all TSU servers. If you haven't verified on the RoVer verification system, then a link to verify your account will be posted instead.
-    - !getroles - Alias for \`verify\`.
-3. !reverify - Posts link to get verified on RoVer's verification system.
+2. !verify [-force] - Fetches data from Roblox to update your name and roles in all TSU servers. If you haven't verified on the Bloxlink verification system, then a link to verify your account will be posted instead.
+    • \`-force\` - Including the \`-force\` flag forces TSUBot to query Bloxlink's database for your Roblox account. Use it if you recently changed your primary account on Bloxlink.
+    • !getroles - Alias for \`verify\`.
+3. !reverify - Posts link to get verified on Bloxlink's verification system.
 
 __**Application Commands**__
 *Will only work in application-reading channels. Not for public use.*

@@ -50,6 +50,9 @@ function request(resolve, reject, options) {
     let req = https.request(options, (res) => {
         res.on("data", (chunk) => {
             // Parse response
+            if (chunk.includes("ratelimited")) {
+                return resolve(-2);
+            }
             let data = JSON.parse(chunk);
             
             // Interpret it

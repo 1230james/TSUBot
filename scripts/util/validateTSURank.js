@@ -67,25 +67,25 @@ function processEmployeeRank(ranks) {
     if (ranks.ADM >= 10) {
         rank = (ranks.ADM >= 70) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.MIA >= 10) {
+    if (rank < rankMO && ranks.MIA >= 10) {
         rank = (ranks.MIA >= 110) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.KGB >= 1) {
+    if (rank < rankMO && ranks.KGB >= 1) {
         rank = (ranks.KGB >= 70) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.RG  >= 1) {
+    if (rank < rankMO && ranks.RG  >= 1) {
         rank = (ranks.RG  >= 50) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.SPE >= 1) {
+    if (rank < rankMO && ranks.SPE >= 1) {
         rank = (ranks.SPE >= 40) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.MOC >= 1) {
+    if (rank < rankMO && ranks.MOC >= 1) {
         rank = (ranks.MOC >= 60) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.MOJ >= 1) {
+    if (rank < rankMO && ranks.MOJ >= 1) {
         rank = (ranks.MOJ >= 60) ? rankMO : rankME;
     }
-    if (rank < rankMO && rank.BIO >= 1) {
+    if (rank < rankMO && ranks.BIO >= 1) {
         rank = (ranks.BIO >= 60) ? rankMO : rankME;
     }
     
