@@ -8,7 +8,9 @@
       need to be removed based on their TSU rank for the group that corresponds to that server.
 */
 
-// This file is going to be extremely atrocious to look at, and I'm really sorry
+// This file is going to be extremely atrocious to look at, and I'm really sorry.
+// I am fully aware that hardcoding a bunch of stuff like this is really suboptimal,
+// but what are you going to do, reject my job application??? B)
 
 // =====================================================================================================================
 
@@ -788,15 +790,123 @@ module.exports = {
     
     // Comms Discord
     MOC: function(ranks) {
-        console.log("Called MOC guild func");
-        return [[],[]];
+        let arrs = [[
+            "510680711460683776"  // Verified
+        ],[
+            "510679418520469524", // Minister
+            "510680082633850901", // Dep. Minister
+            "510679448614469661", // Manager
+            "510679463554711556", // CR
+            "510679466792583169", // DR
+            "510679651039969303", // SR
+            "510679652994646016", // Reporter
+            "510679654525566996", // JR
+            "510679656442363904"  // PI
+        ]];
+        
+        // Guests
+        if (ranks.MOC < 1) {
+            transferBetweenArrays(arrs[1], arrs[0], "510680711460683776");
+            return arrs;
+        }
+        
+        switch(ranks.MOC) {
+        case 90:
+            transferBetweenArrays(arrs[0], arrs[1], "510679418520469524");
+            break;
+        case 80:
+            transferBetweenArrays(arrs[0], arrs[1], "510680082633850901");
+            break;
+        case 70:
+            transferBetweenArrays(arrs[0], arrs[1], "510679448614469661");
+            break;
+        case 60:
+            transferBetweenArrays(arrs[0], arrs[1], "510679463554711556");
+            break;
+        case 50:
+            transferBetweenArrays(arrs[0], arrs[1], "510679466792583169");
+            break;
+        case 40:
+            transferBetweenArrays(arrs[0], arrs[1], "510679651039969303");
+            break;
+        case 30:
+            transferBetweenArrays(arrs[0], arrs[1], "510679652994646016");
+            break;
+        case 20:
+            transferBetweenArrays(arrs[0], arrs[1], "510679654525566996");
+            break;
+        case 10:
+            transferBetweenArrays(arrs[0], arrs[1], "510679656442363904");
+        }
+        
+        // Return
+        return arrs;
     },
     
     // =================================================================================================================
     
     // Justice Discord
     MOJ: function(ranks) {
-        console.log("Called MOJ guild func");
-        return [[],[]];
+        let arrs = [[
+            "615247450877198336"  // Verified
+        ],[
+            "615247449061064717", // Chairman
+            "615247809557430282", // VC
+            "615248060770942995", // SCJ
+            "615249424922312773", // PG
+            "615249427329712128", // CP
+            "615249443515531385", // PJ
+            "615249445596168208", // PA
+            "615249429280194576", // Procurator
+            "615249441154269215", // DA
+            "615249447387004988", // Intern
+            "615247986074583040"  // Supreme Court
+        ]];
+        
+        // Guests
+        if (ranks.MOJ < 1) {
+            transferBetweenArrays(arrs[1], arrs[0], "615247450877198336");
+            return arrs;
+        }
+        
+        // SCOTSU
+        if (ranks.MOJ >= 80) {
+            transferBetweenArrays(arrs[0], arrs[1], "615247986074583040");
+        }
+        
+        switch(ranks.MOJ) {
+        case 100:
+            transferBetweenArrays(arrs[0], arrs[1], "615247449061064717");
+            break;
+        case 90:
+            transferBetweenArrays(arrs[0], arrs[1], "615247809557430282");
+            break;
+        case 80:
+            transferBetweenArrays(arrs[0], arrs[1], "615248060770942995");
+            break;
+        case 70:
+            transferBetweenArrays(arrs[0], arrs[1], "615249424922312773");
+            break;
+        case 60:
+            transferBetweenArrays(arrs[0], arrs[1], "615249427329712128");
+            break;
+        case 50:
+            transferBetweenArrays(arrs[0], arrs[1], "615249443515531385");
+            break;
+        case 40:
+            transferBetweenArrays(arrs[0], arrs[1], "615249445596168208");
+            break;
+        case 30:
+            transferBetweenArrays(arrs[0], arrs[1], "615249429280194576");
+            break;
+        case 20:
+            transferBetweenArrays(arrs[0], arrs[1], "615249441154269215");
+            break;
+        case 10:
+            transferBetweenArrays(arrs[0], arrs[1], "615249447387004988");
+        }
+        
+        // Return
+        return arrs;
     }
 }
