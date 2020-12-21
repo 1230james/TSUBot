@@ -376,7 +376,7 @@ module.exports = {
         }
         
         // NCO
-        else if (ranks.SAF >= 50) {
+        else if (ranks.SAF >= 60) {
             transferBetweenArrays(arrs[0], arrs[1], "582740046923300910");
             switch(ranks.SAF) {
             case 66:
@@ -387,9 +387,6 @@ module.exports = {
                 break;
             case 60:
                 transferBetweenArrays(arrs[0], arrs[1], "562832547520970763");
-                break;
-            case 50:
-                transferBetweenArrays(arrs[0], arrs[1], "499263787048894465");
             }
         }
         
@@ -397,6 +394,9 @@ module.exports = {
         if (ranks.SAF > 0) {
             transferBetweenArrays(arrs[0], arrs[1], "499283969821507584");
             switch(ranks.SAF) {
+            case 50:
+                transferBetweenArrays(arrs[0], arrs[1], "499263787048894465");
+                break;
             case 40:
                 transferBetweenArrays(arrs[0], arrs[1], "499263787333976074");
                 break;
@@ -477,7 +477,7 @@ module.exports = {
         }
         
         // HR
-        else if (ranks.MIA >= 110) {
+        else if (ranks.MIA >= 120) {
             transferBetweenArrays(arrs[0], arrs[1], "510674685143547905");
             switch(ranks.MIA) {
             case 140:
@@ -488,9 +488,6 @@ module.exports = {
                 break;
             case 120:
                 transferBetweenArrays(arrs[0], arrs[1], "510675244009390080");
-                break;
-            case 110:
-                transferBetweenArrays(arrs[0], arrs[1], "510675246152417300");
             }
         }
         
@@ -498,6 +495,8 @@ module.exports = {
         else if (ranks.MIA >= 50) {
             transferBetweenArrays(arrs[0], arrs[1], "510674876097363990");
             switch(ranks.MIA) {
+            case 110:
+                transferBetweenArrays(arrs[0], arrs[1], "510675246152417300");
             case 100:
                 transferBetweenArrays(arrs[0], arrs[1], "510675248253894676");
                 break;
