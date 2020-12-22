@@ -5,10 +5,10 @@
 // =====================================================================================================================
 
 /* Accepts a string and returns an array of strings. The array returned will either contain only the string passed in,
- * or, if the string passed in was 2000 characters or more, will contain substrings of the string passed in, where each
- * substring is shorter than 2000 characters.
+ * or, if the string passed in was 1950 characters or more, will contain substrings of the string passed in, where each
+ * substring is shorter than 1950 characters.
  *
- * firstMax is a number in the range [0, 2000] that allows you to define a limit less than 2000 characters for the max
+ * firstMax is a number in the range [0, 1950] that allows you to define a limit less than 1950 characters for the max
  * allowable length of the first string. No safety checks are performed on firstMax; I trust that you're smart enough to
  * use it properly. */
 function splitString(str, firstMax) {
@@ -19,7 +19,7 @@ function splitString(str, firstMax) {
     if (firstMax) {
         // More than firstMax characters remaining
         if (temp.length >= firstMax) {
-            let end = temp.lastIndexOf(" ");
+            let end = temp.substring(0, firstMax).lastIndexOf(" ");
             arr[arr.length] = temp.substring(0, end);
             temp = temp.substring(end);
             
@@ -31,13 +31,13 @@ function splitString(str, firstMax) {
     }
     
     while (temp.length > 0) {
-        // More than 2000 characters remaining
-        if (temp.length >= 2000) {
-            let end = temp.lastIndexOf(" ");
+        // More than 1950 characters remaining
+        if (temp.length >= 1950) {
+            let end = temp.substring(0, 1950).lastIndexOf(" ");
             arr[arr.length] = temp.substring(0, end);
             temp = temp.substring(end);
             
-        // < 2000 chars remaining
+        // < 1950 chars remaining
         } else {
             arr[arr.length] = temp;
             temp = "";
@@ -48,7 +48,7 @@ function splitString(str, firstMax) {
 }
 
 /* Accepts the application array pulled from the applications spreadsheet, then outputs an array of strings shorter
- * than 2000 characters containing the contents of the application. This array is the array that the function exported
+ * than 1950 characters containing the contents of the application. This array is the array that the function exported
  * by this module returns. */
 function formatApplication(application) {
     let arr = [];
@@ -65,7 +65,7 @@ function formatApplication(application) {
         let qStr = "\n\n**" + info.q + "**\n"
         
         // If we have space left, append qStr to the last string in the array
-        if (arr[arr.length - 1].length + qStr.length < 2000) {
+        if (arr[arr.length - 1].length + qStr.length < 1950) {
             arr[arr.length - 1] = arr[arr.length - 1] + qStr;
 
         // otherwise just make it a new entry
@@ -74,7 +74,7 @@ function formatApplication(application) {
         }
         
         // Split answer string
-        let firstMax = 2000 - arr[arr.length - 1].length;
+        let firstMax = 1950 - arr[arr.length - 1].length;
         let aStrs    = splitString(info.a, firstMax);
         
         // Answer string - first case
@@ -99,10 +99,9 @@ function formatApplication(application) {
   * @param div A string matching one of the values in `config.appChannels`. These values must match the name of a
   * worksheet on the application database Google spreadsheet.
   * @returns A Promise that either passes `null` if an application is not found, or an array of strings, each of which
-  * is less than 2000 characters long, that consist of the entire application in Discord-friendly chunks. The strings
-  * are in order, and the array can be iterated from start to finish to print out or otherwise obtain the entire
-  * application in the order that it is meant to be read in. Each string includes two newline characters for spacing
-  * when printing out each string using a simple loop.
+  * is less than 1950 characters long (2000 with a safety margin of 50), that consist of the entire application in
+  * Discord-friendly chunks. The strings are in order, and the array can be iterated from start to finish to print out
+  * or otherwise obtain the entire application in the order that it is meant to be read in.
 */
 module.exports = function(bot, sheet, userID, div) {
     return new Promise(async function(resolve, reject) {

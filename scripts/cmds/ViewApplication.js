@@ -47,6 +47,7 @@ async function main(message, args, bot) {
     msg.delete();
     let index = 0;
     let timer = setInterval(() => {
+        console.log("length: " + appStrings[index].length);
         message.channel.send(appStrings[index]);
         index++;
         if (index >= appStrings.length) {
