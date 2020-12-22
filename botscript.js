@@ -2,11 +2,10 @@
 "use strict";
 
 // Libraries & Important Variables
-const fs           = require("fs");
-const Roblox       = require("noblox.js");
-const Discord      = require("discord.js");
-
-const startDate = (new Date()).toISOString().substring(0, 10);
+const fs                  = require("fs");
+const Roblox              = require("noblox.js");
+const Discord             = require("discord.js");
+const {GoogleSpreadsheet} = require("google-spreadsheet");
 
 const bot = new Discord.Client();
 bot.cmds  = {};
@@ -15,6 +14,11 @@ bot.util  = {
     "config": require("./config.json"),
     "keys":   require("./keys.json")
 };
+
+const startDate = (new Date()).toISOString().substring(0, 10);
+const dbSheet   = new GoogleSpreadsheet(bot.util.config.appSheetID);
+
+bot.util.dbSheet = dbSheet;
 
 // =====================================================================================================================
 
@@ -176,6 +180,14 @@ function argsCheck(prefixAndCmd, input, cmdObj) {
 
 // Login to Discord
 bot.login(bot.util.keys.discord);
+
+// Authenticate Google Sheet access
+bot.util.dbSheet.useServiceAccountAuth(require("./GoogleAPIAuth.json")).then(() => {
+    bot.util.glog("Google Sheets is ready!");
+}).catch((err) => {
+    bot.util.glog("Google Sheets is NOT ready!");
+    console.error(err);
+});
 
 // Hourly status update
 var hoursOnline = 0;

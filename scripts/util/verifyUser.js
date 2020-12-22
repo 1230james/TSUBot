@@ -1,8 +1,6 @@
 // Verify Discord User in TSU Discord servers
 "use strict";
 
-var robloxIDs = {}; // [string discordSnowflake]: string robloxUserID
-
 // =====================================================================================================================
 
 /** Takes in a Discord snowflake, or user ID, and updates their roles in all TSU Discord servers and, if necessary,
@@ -13,33 +11,21 @@ var robloxIDs = {}; // [string discordSnowflake]: string robloxUserID
   * this message is located in.
   * @param bot The `bot` from the main thread.
   * @param userID string or number matching the Discord snowflake (user id) of the Discord user to be verified.
-  * @param forceQuery boolean value. If `true`, a query will be sent to Bloxlink's API to retrieve the Roblox UserID of
-  * the specified user, regardless of whether the bot has cached it. If `false` or otherwise falsy, a query will be sent
-  * to Bloxlink iff the bot has not cached the Roblox UserID of the specified user.
+  * @param forceQuery boolean value. See documentation on `getRobloxUserID`.
 */
 function main(message, bot, userID, forceQuery) {
     // Discord user id -> Roblox UserID
     bot.util.log(message, "Fetching Roblox UserID.");
-    
-    // Forced Query or value wasn't cached yet
-    if (forceQuery || !robloxIDs[userID]) {
-        bot.util.log(message, "ID not cached this session or forceQuery is true - sending request to Bloxlink.");
-        bot.util.getRobloxUserID(bot.util, userID).then((robloxID) => {
-            robloxIDs[userID] = robloxID;
-            processRobloxID(message, bot, robloxID); // we're gonna be chaining Promises together, so...
-        }).catch((err) => {
-            bot.util.log(message, "Error occurred while trying to fetch Roblox UserID during verification:");
-            console.error(err);
-            // message below is hardcoded to ping me so ik when stuff happens - if you forked this bot, you should change
-            // the line, and every other line that does a similar thing.
-            message.channel.send("I'm sorry **" + message.member.displayName + "**, but an error occured. Please try again"
-                + " later.\n\n<@126516587258707969> Roblox UserID fetch error:\n" + err);
-        });
-    } else {
-        let robloxID = robloxIDs[userID]
-        bot.util.log(message, "ID is cached for this session - ID: " + robloxID);
-        processRobloxID(message, bot, robloxID);
-    }
+    bot.util.getRobloxUserID(bot.util, userID, forceQuery).then((robloxID) => {
+        processRobloxID(message, bot, robloxID); // we're gonna be chaining Promises together, so...
+    }).catch((err) => {
+        bot.util.log(message, "Error occurred while trying to fetch Roblox UserID during verification:");
+        console.error(err);
+        // message below is hardcoded to ping me so ik when stuff happens - if you forked this bot, you should change
+        // the line, and every other line that does a similar thing.
+        message.channel.send("I'm sorry **" + message.member.displayName + "**, but an error occured. Please try again"
+            + " later.\n\n<@126516587258707969> Roblox UserID fetch error:\n" + err);
+    });
 }
 
 function processRobloxID(message, bot, robloxID) {

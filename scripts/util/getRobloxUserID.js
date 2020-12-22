@@ -13,6 +13,8 @@ const RateLimiter = require("limiter").RateLimiter;
 
 const limiter = new RateLimiter(60, "minute");
 
+var robloxIDs = {}; // [string discordSnowflake]: string robloxUserID
+
 // =====================================================================================================================
 
 /** Takes in a Discord snowflake, or user ID, and fetches the UserID of the primary Roblox account tied to the account
@@ -21,11 +23,21 @@ const limiter = new RateLimiter(60, "minute");
   * @param util `bot.util`.
   * @param userID string or number matching the Discord snowflake (user id) of the Discord user whose Roblox account you
   * want to find.
+  * @param forceQuery Any type, but ideally boolean. If `true` or otherwise truthy, a query will be sent to Bloxlink's
+  * API to retrieve the Roblox UserID of the specified user, regardless of whether the bot has cached it. Else, a query
+  * will be sent to Bloxlink iff the bot has not cached the Roblox UserID of the specified user.
   * @returns A Promise that passes the UserID of the primary Roblox account of the Discord user passed in, if one was
   * found. If none was found, -1 is passed. If we are being rate-limited, -2 is passed.
 */
-function main(util, userID) {
+function main(util, userID, forceQuery) {
     return new Promise((resolve, reject) => {
+        // Handle forceQuery
+        if (!forceQuery) {
+            if (robloxIDs[userID]) {
+                return resolve(robloxIDs[userID]);
+            }
+        }
+        
         // Set up options
         let options = {
             "host":    "api.blox.link",
