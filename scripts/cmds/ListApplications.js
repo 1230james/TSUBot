@@ -4,6 +4,8 @@
 // =====================================================================================================================
 
 async function main(message, args, bot) {
+    let stopExecution = false;
+    
     // App channels only
     let divKey = bot.util.config.appChannels[message.channel.id];
     if (!divKey) {
@@ -20,8 +22,9 @@ async function main(message, args, bot) {
         message.channel.send("<@126516587258707969>\n" + err);
         bot.util.log(message, "Error occurred while fetching applicatons:");
         console.error(err);
-        return;
+        stopExecution = true;
     });
+    if (stopExecution) return;
     
     // Print application
     msg.delete();

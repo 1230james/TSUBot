@@ -4,6 +4,8 @@
 // =====================================================================================================================
 
 async function main(message, args, bot) {
+    let stopExecution = false;
+    
     // App channels only
     let divKey = bot.util.config.appChannels[message.channel.id];
     if (!divKey) {
@@ -27,8 +29,9 @@ async function main(message, args, bot) {
         msg.edit("An error occurred when trying to fetch " + args[0] + "'s application:\n" + err);
         bot.util.log(message, "Error occurred when fetching Roblox UserID via username:");
         console.error(err);
-        return;
+        stopExecution = true;
     });
+    if (stopExecution) return;
     
     // Handle nonexistent user
     if (!userID) {
@@ -43,8 +46,9 @@ async function main(message, args, bot) {
         message.channel.send("<@126516587258707969>\n" + err);
         bot.util.log(message, "Error occurred while retrieving applicaton:");
         console.error(err);
-        return;
+        stopExecution = true;
     });
+    if (stopExecution) return;
     
     // Handle nonexistent application
     if (!appStrings) {

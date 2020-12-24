@@ -40,19 +40,6 @@ async function main(message, args, bot) {
         return;
     }
     
-    /*
-    // Query for username - necessary because this command takes in usernames case-insensitively, but noblox.js's
-    // method for accepting group join requests by username handles usernames case-sensitively.
-    let username = await bot.util.getRobloxUsername(userID).catch((err) => {
-        msg.edit("An error occurred while accepting application.");
-        message.channel.send("<@126516587258707969>\n" + err);
-        bot.util.log(message, "Error occurred while querying for username:");
-        console.error(err);
-        stopExecution = true;
-    });
-    if (stopExecution) return;
-    */
-    
     // Accept into group
     await bot.util.Roblox.handleJoinRequest(bot.util.config.groupIDs[divKey], userID, true).catch((err) => {
         stopExecution = true;
@@ -87,18 +74,32 @@ async function main(message, args, bot) {
     // Deleted successfully
     case 0:
         msg.edit("Accepted " + args[0] + "'s application!");
-        /*bot.channels.cache.get(bot.util.config.appLogChannelID).send(
-            "**Applicant:** " + args[0]
+        bot.channels.cache.get(bot.util.config.appLogChannelID).send(
+            "**__Applicant__:** " + await getProperUsername(bot, userID, args[0])
             + "\n**Division:** " + bot.util.config.divNames[divKey]
-            + "\n**Status:** Accepted"
-        );*/
+            + "\n**Status:** Accepted ✅"
+        );
         bot.util.log(message, "Accepted " + args[0] + "'s application.");
         break;
+        
     // Successful execution, but no app found
     case 1:
         msg.edit("No application found from " + args[0] + ".\nDid you enter the correct username?");
         bot.util.log(message, "Tried to accept " + args[0] + "'s application, but none was found.");
     }
+}
+
+/* Retrieves the Roblox username of the account specified by the UserID passed. If some error occurs, the value
+ * passed for `fallback` will be returned instead. */
+function getProperUsername(bot, userID, fallback) {
+    return new Promise(async (resolve) => {
+        let stop = false;
+        let name = await bot.util.getRobloxUsername(userID).catch((err) => {
+            stop = true;
+        });
+        if (stop || !name) return resolve(fallback);
+        return resolve(name);
+    });
 }
 
 // =====================================================================================================================
