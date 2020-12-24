@@ -8,11 +8,10 @@ const https = require("https");
 /** Takes in a Roblox UserID and retrieves the current username associated with that UserID, if available. Results are
   * NOT cached, so each call will make a request to Roblox and fetch the most current information available through
   * Roblox's web API endpoints.
-  * @param Roblox noblox.js module. Require in main script then pass it in.
   * @param userID string or number matching the Roblox UserID of the desired player. 
   * @returns A Promise that passes a string equaling the username, or null if none was found.
 */
-function main(Roblox, userID) {
+function main(userID) {
     return new Promise((resolve, reject) => {
         // Prepare variables
         let options   = {

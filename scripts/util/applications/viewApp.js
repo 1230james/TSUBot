@@ -94,7 +94,7 @@ function formatApplication(application) {
 /** Accepts a Roblox UserID and a division key (see parameter `div`) and fetches the application from specified Roblox
   * user for the specified division.
   * @param bot `bot` from the main thread.
-  * @param sheet A `GoogleSpreadsheet` that's already authenticated.
+  * @param sheet A `GoogleSpreadsheet` that's already authenticated that contains the application spreadsheet.
   * @param userID A Roblox UserID. Must be a string or a number.
   * @param div A string matching one of the values in `config.appChannels`. These values must match the name of a
   * worksheet on the application database Google spreadsheet.

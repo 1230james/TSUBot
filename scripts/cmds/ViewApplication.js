@@ -18,12 +18,16 @@ async function main(message, args, bot) {
         return;
     }
     
+    // Post ACK
+    bot.util.log(message, "Fetching " + args[0] + "'s application.");
+    let msg = await message.channel.send("Fetching " + args[0] + "'s application. Please wait...");
+    
     // Retrieve Roblox UserID
-    let msg    = await message.channel.send("Fetching " + args[0] + "'s application. Please wait...");
     let userID = await bot.util.getRobloxUserIDFromUsername(args[0]).catch((err) => {
         msg.edit("An error occurred when trying to fetch " + args[0] + "'s application:\n" + err);
         bot.util.log(message, "Error occurred when fetching Roblox UserID via username:");
         console.error(err);
+        return;
     });
     
     // Handle nonexistent user
@@ -34,7 +38,13 @@ async function main(message, args, bot) {
     }
     
     // Retrieve application
-    let appStrings = await bot.util.applications.viewApp(bot, bot.util.dbSheet, userID, divKey);
+    let appStrings = await bot.util.applications.viewApp(bot, bot.util.dbSheet, userID, divKey).catch((err) => {
+        msg.edit("An error occurred while retrieving application.");
+        message.channel.send("<@126516587258707969>\n" + err);
+        bot.util.log(message, "Error occurred while retrieving applicaton:");
+        console.error(err);
+        return;
+    });
     
     // Handle nonexistent application
     if (!appStrings) {
@@ -47,7 +57,6 @@ async function main(message, args, bot) {
     msg.delete();
     let index = 0;
     let timer = setInterval(() => {
-        console.log("length: " + appStrings[index].length);
         message.channel.send(appStrings[index]);
         index++;
         if (index >= appStrings.length) {

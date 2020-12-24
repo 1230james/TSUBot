@@ -13,7 +13,7 @@
 */
 function main(message, bot, userID) {
     return new Promise((resolve, reject) => {
-        bot.util.getRobloxUsername(bot.util.Roblox, userID).then((username) => {
+        bot.util.getRobloxUsername(userID).then((username) => {
             // Prep variables
             let guildIDs = bot.util.config.guildIDs;
             let count    = 0; // it's either chaining a dozen promises together or the idiot way, so the idiot way it is
