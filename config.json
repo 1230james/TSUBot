@@ -3,6 +3,8 @@
     
     "appSheetID": "1shDlZbi5m_vYa-po_Ry-u4mTfpePsTCARi44nv-e7SA",
     
+    "appLogChannelID": "790404505262620702",
+    
     "groupIDs": {
         "MAIN": "4396304",
         "ADM":  "4406263",
@@ -27,6 +29,14 @@
         "SPE":  "487827617274134549",
         "MOC":  "487830813938024458",
         "MOJ":  "487828822637543435"
+    },
+    "divNames": {
+        "ADM":  "Ministry of Admission",
+        "SAF":  "Soviet Armed Forces",
+        "MIA":  "Ministry of Internal Affairs",
+        "KGB":  "Committee for State Security",
+        "MOC":  "Ministry of Communications",
+        "MOJ":  "Ministry of Justice"
     },
     
     "appChannels": {
