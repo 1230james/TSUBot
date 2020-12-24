@@ -9,13 +9,12 @@ const https = require("https");
   * a table. The keys of the table returned will match those listed for the group IDs in `config.json`. Results are NOT
   * cached (by design), so any subsequent calls will always contact Roblox and pull the latest information as available
   * through Roblox's web API endpoints.
-  * @param Roblox noblox.js module. Require in main script then pass it in.
   * @param groupIDs the table of group IDs from `config.json`.
   * @param userID string or number matching the Roblox UserID of the desired player. 
   * @returns A Promise that passes a table (dictionary) containing the numerical rank values of the player in
   * every TSU group.
 */
-function main(Roblox, groupIDs, userID) {
+function main(groupIDs, userID) {
     return new Promise((resolve, reject) => {
         // Prepare variables
         let t         = {};
@@ -38,6 +37,9 @@ function main(Roblox, groupIDs, userID) {
         let req = https.request(options, (res) => {
             res.on("data", (chunk) => {
                 let data = JSON.parse(chunk).data;
+                if (!data) {
+                    return resolve(t);
+                }
                 
                 // Fill out t
                 for (let groupObj of data) {

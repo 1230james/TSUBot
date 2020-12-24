@@ -139,6 +139,12 @@ bot.on("message", function(message) {
     // One-time vars
     let prefix = "!";
     
+    // Passed Border
+    if (message.channel.id == bot.util.config.passedBorderChannelID) {
+        bot.util.processImmigrant(message, bot);
+        return; // don't process commands in the passed border channel
+    }
+    
     // Command processing
     processCommand(prefix, message);
 });

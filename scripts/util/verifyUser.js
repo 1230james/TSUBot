@@ -48,7 +48,7 @@ function processRobloxID(message, bot, robloxID) {
     // Roblox UserID -> TSU group ranks
     default:
         bot.util.log(message, "Fetching TSU ranks.");
-        bot.util.getTSURanks(bot.util.Roblox, bot.util.config.groupIDs, robloxID).then((ranks) => {
+        bot.util.getTSURanks(bot.util.config.groupIDs, robloxID).then((ranks) => {
             validateGroupRanks(message, bot, robloxID, ranks);
         }).catch((err) => {
             bot.util.log(message, "Error occurred while trying to fetch TSU ranks during verification:");
