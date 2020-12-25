@@ -32,11 +32,16 @@ function processRobloxID(message, bot, robloxID) {
     bot.util.log(message, "Processing Roblox UserID.");
     switch(robloxID) {
     case -1:
-        message.channel.send("**" + message.member.displayName + "**, I could not find a Roblox account linked to your"
-            + " Discord account.\nPlease head to <https://blox.link/verify>, sign in at the __upper-right__ by pressing"
-            + " `Sign in with Discord`, select any TSU Discord server, and follow the instructions to verify your"
-            + " Roblox account. Be sure to set it as your __primary account__ - I need you to do that in order to work"
-            + " properly!\n\nOnce you're finished, come back and say `!verify` again.");
+        message.channel.send(`**${message.member.displayName}**, I could not find a Roblox account linked to you, or you did not set a primary account with Bloxlink.
+Please head to <https://blox.link> to verify and set your primary account.
+
+__Instructions__
+• If you aren't already signed in, please click \`Sign in with Discord\` in the upper-right.
+• Visit this page: <https://blox.link/verification/485528044828753940>
+• Scroll down to \`Link A New Account To This Server\` and follow the instructions to verify your Roblox account.
+• **Remember to CHECK the \`Set this as your primary account\` box!**
+• Once complete, visit this page: <https://blox.link/account>, and double-check to make sure your primary account is set correctly.
+• After you've finished everything about, come back here and say \`!verify -force\`.`);
         bot.util.log(message, "Attempted to fetch Roblox UserID, but found none. Sent verification instructions.");
         break;
     case -2:

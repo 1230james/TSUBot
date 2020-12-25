@@ -70,7 +70,10 @@ function request(resolve, reject, options) {
             if (data.status == "ok") {
                 return resolve(parseInt(data.primaryAccount));
             } else if (data.status == "error") {
-                if (data.error == "This user is not linked with Bloxlink.") { // this is very stupid but i'm lazy af rn
+                // these are very stupid but i'm lazy af rn
+                if (data.error == "This user is not linked with Bloxlink.") {
+                    return resolve(-1);
+                } else if (data.error.includes("not have a primary account")) {
                     return resolve(-1);
                 }
                 return reject(data.error);
