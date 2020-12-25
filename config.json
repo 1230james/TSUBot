@@ -1,0 +1,51 @@
+{
+    "devMode": true,
+    
+    "appSheetID": "1shDlZbi5m_vYa-po_Ry-u4mTfpePsTCARi44nv-e7SA",
+    
+    "appLogChannelID": "790404505262620702",
+    "passedBorderChannelID": "495836903283752975",
+    
+    "groupIDs": {
+        "MAIN": "4396304",
+        "ADM":  "4406263",
+        "SAF":  "4396451",
+        "MIA":  "4410112",
+        "KGB":  "4409173",
+        "RG" :  "4410110",
+        "SPE":  "4409178",
+        "MOC":  "4409176",
+        "MOJ":  "4410111",
+        "BIO":  "4659509",
+        "SAD":  "6196131"
+    },
+    "guildIDs": {
+        "MAIN": "485528044828753940",
+        "CPSU": "487490909118660609",
+        "ADM":  "487826562679570435",
+        "SAF":  "487826494257627136",
+        "MIA":  "487830061437681666",
+        "KGB":  "487827391771705345",
+        "RG" :  "487826670489829376",
+        "SPE":  "487827617274134549",
+        "MOC":  "487830813938024458",
+        "MOJ":  "487828822637543435"
+    },
+    "divNames": {
+        "ADM":  "Ministry of Admission",
+        "SAF":  "Soviet Armed Forces",
+        "MIA":  "Ministry of Internal Affairs",
+        "KGB":  "Committee for State Security",
+        "MOC":  "Ministry of Communications",
+        "MOJ":  "Ministry of Justice"
+    },
+    
+    "appChannels": {
+        "554180305104273418": "ADM",
+        "554207457887518730": "SAF",
+        "554206958379466752": "MIA",
+        "578294849002930207": "KGB",
+        "647054115200827406": "MOC",
+        "617481829901008899": "MOJ"
+    }
+}

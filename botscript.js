@@ -1,147 +1,209 @@
-// TSUBOT
+// TSUBot by James "1230james" Hyun
+"use strict";
 
-// Libraries
-var Discord = require("discord.js"); //Set up the bot
-var bot = new Discord.Client();
-var moment = require("moment");
-var fs = require("fs");
-var http = require("http");
-var config = require("./config.json");
-var log = (msg) => { // Console timestamp
-		console.log(`[TSUBot ${moment().format("MM-DD-YYYY HH:mm:ss")}] ${msg}`);
-	};
-const request = require('request');
-const nodeSchedule = require('node-schedule');
+// Libraries & Important Variables
+const fs                  = require("fs");
+const Roblox              = require("noblox.js");
+const Discord             = require("discord.js");
+const {GoogleSpreadsheet} = require("google-spreadsheet");
 
-// My Scripts + Files
-const DiscFunc = require("./scripts/DiscFunctions.js");
-const Roblox = require("./scripts/RobloxFunctions.js");
-//const Verify = require("./scripts/Verify.js");
-const AcceptApp = require("./scripts/AcceptApplication.js");
-const ProcessImmigrant = require("./scripts/ProcessImmigrant.js");
-const database = require("./database.json");
-const databackup = require("./tempdata.json");
+const bot = new Discord.Client();
+bot.cmds  = {};
+bot.util  = {
+    "Roblox": Roblox,
+    "config": require("./config.json"),
+    "keys":   require("./keys.json")
+};
 
-// Prepare Bot
-bot.on('ready', () => {
-	var botStatus = {} // Used for setting the bot's status and online/offline state, etc.
-	botStatus.status = 'online'
-	botStatus.game = {}
-	botStatus.game.name = 'City of Volinsk, Soviet Border'
-	botStatus.game.type = "PLAYING"
-	bot.user.setPresence(botStatus).catch(log); //Set status and send a message to the console once the bot is ready
-	log(`Discord's ready to go!`);
-});
-// Don't put Roblox login stuff here; it's already in RobloxFunctions.js
+const startDate = new Date();
+const dbSheet   = new GoogleSpreadsheet(bot.util.config.appSheetID);
 
-// Periodic login status check
-const timer = nodeSchedule.scheduleJob("00 * * * *",function() { // "00 * * * *" = Every hour at 0th minute
-	let d = new Date();
-	Roblox.setStatus("Verified online at " + d.toUTCString());
-});
+bot.util.dbSheet = dbSheet;
 
-bot.on('message', (message) => { //When the bot is on, do this stuff
-let input = message.content.toUpperCase();
-let prefix = "!";
+// =====================================================================================================================
 
-// help or cmds - Shows commands and info
-if ((input == prefix + "HELP") || (input == prefix + "CMDS")) {
-	return;
-	if(message.author.bot) return;
-	
-	var CMDS = `Uhh... hi`
-
-	sendDM(CMDS,'Sent commands');
+// Load in utilities
+const utilityFiles = fs.readdirSync(__dirname + "/scripts/util")
+    .filter(file => file.endsWith(".js"));
+for (let file of utilityFiles) {
+    let util = require(__dirname + "/scripts/util/" + file);
+    bot.util[util.name] = util.func;
 }
 
-// invite - Auth URL + Server inv
-if (input == prefix + "INVITE") {
-	return;
-	if (message.author.bot) return;
-	DiscFunc.sendMessage(message,`__**AUTH URL**__
-https://discordapp.com/oauth2/authorize?&client_id=258052804587945984&scope=bot&permissions=0
-
-__**OFFICIAL SERVER**__
-https://discord.gg/sjeaWbP
-Come here to see new beta features in action, general talk, and for support for PilotBot, WrightBot, and others.`,'Sent auth link')
+// Load in all the commands
+const commandFiles = fs.readdirSync(__dirname + "/scripts/cmds")
+    .filter(file => file.endsWith(".js"));
+for (let file of commandFiles) {
+    let cmd = require(__dirname + "/scripts/cmds/" + file);
+    bot.cmds[cmd.command] = cmd;
+    
+    if (cmd.aliases != null) { // Type safety? What's that? :^)
+        for (let alias of cmd.aliases) { // I love you pass by reference
+            bot.cmds[alias] = bot.cmds[cmd.command];
+        }
+    }
 }
 
-// App Handling
-if (input.startsWith(prefix + "VIEW ")) {
-	let username = message.content.substring(message.content.indexOf(" ")+1);
-	AcceptApp.view(message,username);
+// =====================================================================================================================
+
+// Misc. Functions
+
+// Log in to Roblox with the cookie passed.
+// Jesus christ this is messy as hell
+function runAfterSetCookie(cookie) {
+    // Signs of life
+    bot.util.setOnlineStatus(bot, startDate, 0).then(res => {
+        if (res.status) {
+            bot.util.glog("Roblox is ready!");
+        } else {
+            bot.util.glog("Setting Roblox status failed: " + res.errors[0].message);
+        }
+    }).catch(err => {
+        bot.util.glog("Error occurred when trying to set Roblox status.");
+        console.error(err);
+    });
+    
+    // Save cookie
+    bot.util.keys.roblox = cookie;
+    fs.writeFile("keys.json", JSON.stringify(bot.util.keys, null, 4), (err) => {
+        if (err) {
+            throw err;
+        }
+    });
 }
-if (input.startsWith(prefix + "LIST")) {
-	AcceptApp.list(message);
-}
-if (input.startsWith(prefix + "ACCEPT ")) {
-	let username = message.content.substring(message.content.indexOf(" ")+1);
-	AcceptApp.accept(message,username);
-}
-if (input.startsWith(prefix + "DENY ")) {
-	let username = message.content.substring(message.content.indexOf(" ")+1);
-	AcceptApp.deny(message,username);
+function robloxLogin(cookie) {
+    (new Promise((resolve, reject) => {
+        try {
+            Roblox.setCookie(cookie).then(() => {
+                runAfterSetCookie(cookie);
+                resolve();
+            }).catch(err => {
+                return reject(err);
+            });
+        } catch(err) {
+            return reject(err);
+        }
+    })).catch(err => {
+        bot.util.glog("Error occurred when trying to call Roblox.setCookie()");
+        console.error(err);
+    });
 }
 
-// Passed Border Handling
-if (message.channel.id == '495836903283752975') {
-	if (!(input.startsWith("/"))) {
-		ProcessImmigrant.main(message);
-	}
-}
+// =====================================================================================================================
 
-// New Cookie
-if (input.startsWith(prefix + "COOKIE ")) {
-	if (message.author.id != '126516587258707969') return;
-	let cookie = message.content.substring(message.content.indexOf(" ")+1);
-	message.delete();
-	try {
-		Roblox.cookieLogin(cookie,message);
-	} catch(err) {
-		DiscFunc.sendMessage(message,err);
-	}
-}
-
-// New Code
-if (input.startsWith(prefix + "CODE ")) {
-	if (message.author.id != '126516587258707969') return;
-	let code = message.content.substring(message.content.indexOf(" ")+1);
-	message.delete();
-	try {
-		Roblox.twoFactorAuth(code,message);
-	} catch(err) {
-		DiscFunc.sendMessage(message,err);
-	}
-}
-
-// clayman0
-if (message.author.id == '312285113952108555' && !(input.startsWith(prefix))) {
-	let str = message.content;
-	str = str.replace(/@everyone/g, '@ everyone');
-	str = str.replace(/@here/g, '@ here');
-	DiscFunc.sendMessage(message,"<@312285113952108555> said:\n" + message.content);
-	message.delete();
-}
-
-// restart - Force a crash
-if (input.startsWith(prefix + "RESTART")) {
-	if (message.author.id != '126516587258707969') return;
-	let botStatus = {} 
-	botStatus.status = 'invisible'
-	bot.user.setPresence(botStatus).catch(err => {log(err)}); 
-	DiscFunc.sendMessage(message,"Restarting...");
-	throw "===== RESTARTING =====";
-}
-
-// Verify
-/*
-if (input == prefix + "VERIFYTEST") {
-	if (message.author.id != "126516587258707969") return;
-	DiscFunc.sendMessage(message,"Verify test");
-	Verify.main(message);
-}
-*/
-
+// Stuff to run once bot is initially online
+bot.on("ready", () => {
+    // Set status
+    let presenceData = {};
+    if (bot.util.config.devMode) {
+        presenceData.status = "idle";
+        presenceData.activity = {
+            type: "PLAYING",
+            name: "Development Mode - I may be dysfunctional"
+        }
+    } else {
+        presenceData.status = "online";
+        presenceData.activity = {
+            type: "PLAYING",
+            name: "City of Volinsk, Soviet Border"
+        }
+    }
+    bot.user.setPresence(presenceData).catch(err => { console.log(err) });
+    
+    // Set avatar
+        // TODO
+    
+    // Print to console
+    bot.util.glog("Discord is ready!");
+    
+    // Login to Roblox
+    if (bot.util.keys.roblox) {
+        robloxLogin(bot.util.keys.roblox);
+    } else {
+        bot.util.glog("Roblox is NOT ready - could not find a cookie in the keys file!");
+    }
 });
 
-bot.login(config.auth);
+// =====================================================================================================================
+
+// Stuff to run whenever a message is sent
+bot.on("message", function(message) {
+    // Prevent people who arent supposed to use the bot from using it
+    if (message.author.bot) return;
+    if (bot.util.config.devMode && message.author.id != "126516587258707969"
+        && message.author.id != "213116252401434625") return;
+    
+    // Passive stuff
+    // Passed Border
+    if (message.channel.id == bot.util.config.passedBorderChannelID) {
+        bot.util.processImmigrant(message, bot);
+        return; // don't process commands in the passed border channel
+    }
+    
+    // One-time vars
+    let prefix = "!";
+    
+    // Command processing
+    processCommand(prefix, message);
+});
+
+function processCommand(prefix, message) {
+    let input = message.content.toLowerCase();
+    for (let cmd in bot.cmds) {
+        // Match command
+        let prefixAndCmd = prefix + cmd;
+        if (input.substring(0, prefixAndCmd.length) == prefixAndCmd) {
+            if (canRunCommand(prefixAndCmd, input, bot.cmds[cmd])) {
+                let args = input.substring(prefixAndCmd.length + 1).split(" ");
+                bot.cmds[cmd].func(message, args, bot);
+            }
+        }
+    };
+}
+
+function canRunCommand(prefixAndCmd, input, cmdObj) {
+    return argsCheck(prefixAndCmd, input, cmdObj);
+    // maybe I can put more stuff here later idk
+}
+
+function argsCheck(prefixAndCmd, input, cmdObj) {
+    if (cmdObj.hasArgs) { // If this command is expecting arguments
+        if (input.length == prefixAndCmd.length) { 
+            return true; // If the message only contains the command, run command
+        }
+        if (input.substring(0, prefixAndCmd.length + 1) == prefixAndCmd + " ") {
+            return true; // If whitespace separates the command and the first argument, run command
+        }
+        return false;
+    } else { // If this comand is NOT expecting args
+        return (input.length == prefixAndCmd.length); // run command iff input matches the command
+    }
+}
+
+// =====================================================================================================================
+
+// Login to Discord
+bot.login(bot.util.keys.discord);
+
+// Authenticate Google Sheet access
+bot.util.dbSheet.useServiceAccountAuth(require("./GoogleAPIAuth.json")).then(() => {
+    bot.util.glog("Google Sheets is ready!");
+}).catch((err) => {
+    bot.util.glog("Google Sheets is NOT ready!");
+    console.error(err);
+});
+
+// Hourly status update
+var hoursOnline = 0;
+setInterval(function() {
+    hoursOnline++;
+    bot.util.setOnlineStatus(bot, startDate, hoursOnline).then(res => {
+        if (res.status) {
+            bot.util.glog("Updated online time on Roblox status.");
+        } else {
+            bot.util.glog("Setting Roblox status failed: " + res.errors[0].message);
+        }
+    }).catch(err => {
+        throw err;
+    });
+}, 3600000); // every 1 hour
