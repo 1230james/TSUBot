@@ -87,7 +87,7 @@ function getTimeStr(date) {
 */
 function main(bot, date, hoursOnline) {
     return new Promise(async (resolve, reject) => {
-        let str = getTimeStr(date) + "부터 " + hoursOnline + " 시동안 일했어요.";
+        let str = getTimeStr(date) + "부터 " + hoursOnline + "시간 동안 일했어요.";
         bot.util.glog("Setting online status: '" + str + "'");
         
         let stopExecution = false;
