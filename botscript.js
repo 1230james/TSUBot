@@ -15,7 +15,7 @@ bot.util  = {
     "keys":   require("./keys.json")
 };
 
-const startDate = (new Date()).toISOString().substring(0, 10);
+const startDate = new Date();
 const dbSheet   = new GoogleSpreadsheet(bot.util.config.appSheetID);
 
 bot.util.dbSheet = dbSheet;
@@ -52,7 +52,7 @@ for (let file of commandFiles) {
 // Jesus christ this is messy as hell
 function runAfterSetCookie(cookie) {
     // Signs of life
-    bot.util.setRobloxStatus(Roblox, "Logged in on " + startDate + "; online for 0 hours").then(res => {
+    bot.util.setOnlineStatus(bot, startDate, 0).then(res => {
         if (res.status) {
             bot.util.glog("Roblox is ready!");
         } else {
@@ -134,16 +134,14 @@ bot.on("message", function(message) {
         && message.author.id != "213116252401434625") return;
     
     // Passive stuff
-    // Placeholder
-    
-    // One-time vars
-    let prefix = "!";
-    
     // Passed Border
     if (message.channel.id == bot.util.config.passedBorderChannelID) {
         bot.util.processImmigrant(message, bot);
         return; // don't process commands in the passed border channel
     }
+    
+    // One-time vars
+    let prefix = "!";
     
     // Command processing
     processCommand(prefix, message);
@@ -199,8 +197,7 @@ bot.util.dbSheet.useServiceAccountAuth(require("./GoogleAPIAuth.json")).then(() 
 var hoursOnline = 0;
 setInterval(function() {
     hoursOnline++;
-    bot.util.setRobloxStatus(Roblox, "Logged in on " + startDate + "; online for " + hoursOnline + " hours")
-    .then(res => {
+    bot.util.setOnlineStatus(bot, startDate, hoursOnline).then(res => {
         if (res.status) {
             bot.util.glog("Updated online time on Roblox status.");
         } else {
