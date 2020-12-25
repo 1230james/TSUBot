@@ -65,7 +65,7 @@ function runAfterSetCookie(cookie) {
     
     // Save cookie
     bot.util.keys.roblox = cookie;
-    fs.writeFile("keys.json", JSON.stringify(bot.util.keys, null, 4), (err) => {
+    fs.writeFile(__dirname + "/keys.json", JSON.stringify(bot.util.keys, null, 4), (err) => {
         if (err) {
             throw err;
         }
