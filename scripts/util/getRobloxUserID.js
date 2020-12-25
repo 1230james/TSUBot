@@ -20,7 +20,6 @@ var robloxIDs = {}; // [string discordSnowflake]: string robloxUserID
 /** Takes in a Discord snowflake, or user ID, and fetches the UserID of the primary Roblox account tied to the account
   * the snowflake belongs to by checking Bloxlink's servers. This method will turn up empty-handed if the Discord user
   * has not verified with Bloxlink or if they haven't set a primary account with Bloxlink.
-  * @param util `bot.util`.
   * @param userID string or number matching the Discord snowflake (user id) of the Discord user whose Roblox account you
   * want to find.
   * @param forceQuery Any type, but ideally boolean. If `true` or otherwise truthy, a query will be sent to Bloxlink's
@@ -29,7 +28,7 @@ var robloxIDs = {}; // [string discordSnowflake]: string robloxUserID
   * @returns A Promise that passes the UserID of the primary Roblox account of the Discord user passed in, if one was
   * found. If none was found, -1 is passed. If we are being rate-limited, -2 is passed.
 */
-function main(util, userID, forceQuery) {
+function main(userID, forceQuery) {
     return new Promise((resolve, reject) => {
         // Handle forceQuery
         if (!forceQuery) {

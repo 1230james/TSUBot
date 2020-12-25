@@ -16,7 +16,7 @@
 function main(message, bot, userID, forceQuery) {
     // Discord user id -> Roblox UserID
     bot.util.log(message, "Fetching Roblox UserID.");
-    bot.util.getRobloxUserID(bot.util, userID, forceQuery).then((robloxID) => {
+    bot.util.getRobloxUserID(userID, forceQuery).then((robloxID) => {
         processRobloxID(message, bot, robloxID); // we're gonna be chaining Promises together, so...
     }).catch((err) => {
         bot.util.log(message, "Error occurred while trying to fetch Roblox UserID during verification:");
