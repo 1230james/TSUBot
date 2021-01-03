@@ -41,7 +41,7 @@ __Instructions__
 • Scroll down to \`Link A New Account To This Server\` and follow the instructions to verify your Roblox account.
 • **Remember to CHECK the \`Set this as your primary account\` box!**
 • Once complete, visit this page: <https://blox.link/account>, and double-check to make sure your primary account is set correctly.
-• After you've finished everything about, come back here and say \`!verify -force\`.`);
+• After you've finished everything above, come back here and say \`!verify -force\`.`);
         bot.util.log(message, "Attempted to fetch Roblox UserID, but found none. Sent verification instructions.");
         break;
     case -2:
