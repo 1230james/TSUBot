@@ -57,14 +57,21 @@ module.exports = function(message, bot, ranks) {
             bot.guilds.fetch(guildIDs[div]).then((guild) => {
                 // Get member
                 guild.members.fetch(message.author.id).then((member) => {
-                    count++; // putting it here to be fail-passive
                     processMember(member, div, ranks).then(() => {
+                        count++;
                         if (count >= total) {
                             return resolve();
                         }
                         
-                    }).catch((err) => {
-                        return reject(err);
+                    }).catch((err) => { // https://gyazo.com/bbd521c542d2ff3cefbb0ff97d6746de
+                        if (err.message.includes("Unknown Member")) {
+                            count++;
+                            if (count >= total) {
+                                return resolve();
+                            }
+                        } else {
+                            return reject(err);
+                        }
                     });
                     
                 }).catch(() => {
