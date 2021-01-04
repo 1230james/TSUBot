@@ -40,8 +40,15 @@ function main(message, bot, userID) {
                                 return resolve(username);
                             }
                             
-                        }).catch((err) => {
-                            return reject(err);
+                        }).catch((err) => { // https://gyazo.com/bbd521c542d2ff3cefbb0ff97d6746de
+                            if (err.message.includes("Unknown Member")) {
+                                count++;
+                                if (count >= total) {
+                                    return resolve();
+                                }
+                            } else {
+                                return reject(err);
+                            }
                         });
                         
                     }).catch(() => {
