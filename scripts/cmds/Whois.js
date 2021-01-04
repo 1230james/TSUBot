@@ -6,10 +6,8 @@
 async function main(message, args, bot) {
     // No args
     if (args[0] == "") {
-        message.channel.send("**" + message.member.displayName + "**, you need to specify a user to update.\nThe"
-            + " `update` command is for *verifying another user.* Are you looking for the `verify` or `getroles`"
-            + " commands instead?");
-        bot.util.log(message, "Attempted to update a user, but passed no args.");
+        message.channel.send("**" + message.member.displayName + "**, you need to specify a Discord user to look up.");
+        bot.util.log(message, "Attempted to whois a user, but passed no args.");
         return;
     }
     
