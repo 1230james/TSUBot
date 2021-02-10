@@ -568,6 +568,11 @@ module.exports = {
             "495792203080400898", // LR
             "657702710874734599"  // Spetsnaz
         ]];
+
+        // Spetsnaz role - do before guest check to let verified guests have spets role if they need it
+        if (ranks.SPE > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "657702710874734599");
+        }
         
         // Guest
         if (ranks.KGB < 1) {
@@ -637,11 +642,6 @@ module.exports = {
             case 10:
                 transferBetweenArrays(arrs[0], arrs[1], "495792144049766431");
             }
-        }
-        
-        // Spetsnaz role
-        if (ranks.SPE > 0) {
-            transferBetweenArrays(arrs[0], arrs[1], "657702710874734599");
         }
         
         // Return
@@ -748,6 +748,7 @@ module.exports = {
             "505871191769088011", // Chief Op
             "505871762035310593", // Alfa
             "505871763515637780", // Vympel
+            "808849519276982312", // Smerch
             "790066447165816844", // Operative
             "531595277941997589"  // Trainee
         ]];
@@ -773,6 +774,9 @@ module.exports = {
             break;
         case 20:
             transferBetweenArrays(arrs[0], arrs[1], "505871763515637780");
+            break;
+        case 18:
+            transferBetweenArrays(arrs[0], arrs[1], "808849519276982312");
             break;
         case 15:
             transferBetweenArrays(arrs[0], arrs[1], "790066447165816844");
