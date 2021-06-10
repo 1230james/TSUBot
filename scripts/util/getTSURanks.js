@@ -36,7 +36,13 @@ function main(groupIDs, userID) {
         // Web request
         let req = https.request(options, (res) => {
             res.on("data", (chunk) => {
-                let data = JSON.parse(chunk).data;
+                let json;
+                try {
+                    json = JSON.parse(chunk);
+                } catch(err) {
+                    reject(err);
+                }
+                let data = json.data;
                 if (!data) {
                     return resolve(t);
                 }
