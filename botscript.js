@@ -194,6 +194,7 @@ bot.util.dbSheet.useServiceAccountAuth(require("./GoogleAPIAuth.json")).then(() 
 });
 
 // Hourly status update
+/* bro they really removed the status updates
 var hoursOnline = 0;
 setInterval(function() {
     hoursOnline++;
@@ -207,3 +208,4 @@ setInterval(function() {
         throw err;
     });
 }, 3600000); // every 1 hour
+*/
