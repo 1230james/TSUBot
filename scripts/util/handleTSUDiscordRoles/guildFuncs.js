@@ -489,11 +489,14 @@ module.exports = {
         
         // =====================================================================
         
-        // SAFD
-        if (ranks.ARM_86R > 0) {
-            transferBetweenArrays(arrs[0], arrs[1], "851892550021414933");
-            if (ranks.ARM_86R >= 60) {
-                transferBetweenArrays(arrs[0], arrs[1], "852695638960635915");
+        // Regiments
+        if (ranks.SAF < 50) { // exclude HICOM
+            // 86th Rifle
+            if (ranks.ARM_86R > 0) {
+                transferBetweenArrays(arrs[0], arrs[1], "851892550021414933");
+                if (ranks.ARM_86R >= 60) {
+                    transferBetweenArrays(arrs[0], arrs[1], "852695638960635915");
+                }
             }
         }
         

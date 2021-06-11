@@ -145,12 +145,14 @@ function validateABranchRank(userID, util, ranks, branchKey, info) {
         if (rank != ranks[branchKey]) {
             ranks[branchKey] = rank;
             try {
-                return resolve(await util.Roblox.setRank(util.config.groupIDs[branchKey], userID, rank));
+                await util.Roblox.setRank(util.config.groupIDs[branchKey], userID, rank);
+                return resolve(ranks);
             } catch(err) {
                 return reject(err);
             }
+        } else {
+            return resolve(ranks);
         }
-        return resolve(ranks);
     });
 }
 
