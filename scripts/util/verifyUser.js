@@ -65,15 +65,24 @@ __Instructions__
 }
 
 function validateGroupRanks(message, bot, robloxID, ranks) {
-    // TSU ranks -> TSU ranks but with main group rank checked
-    bot.util.log(message, "Validating main group rank.");
-    bot.util.validateTSURank(robloxID, bot.util, ranks).then((validatedRanks) => {
-        processGroupRanks(message, bot, robloxID, validatedRanks);
+    // TSU ranks -> TSU ranks but with group ranks checked
+    bot.util.log(message, "Validating SAF group ranks.");
+    bot.util.validateSAFRank(robloxID, bot.util, ranks).then((validatedRanks) => {
+        bot.util.log(message, "Validating main group rank.");
+        bot.util.validateTSURank(robloxID, bot.util, ranks).then((validatedRanks) => {
+            processGroupRanks(message, bot, robloxID, validatedRanks);
+            
+        }).catch((err) => {
+            bot.util.log(message, "Error occurred while trying to validate TSU main group rank during verification:");
+            console.error(err);
+            message.channel.send("I'm sorry **" + message.member.displayName + "**, but an error occured. Please try again"
+                + " later.\n\n<@126516587258707969> TSU main group rank validation error:\n" + err);
+        });
     }).catch((err) => {
-        bot.util.log(message, "Error occurred while trying to validate TSU main group rank during verification:");
+        bot.util.log(message, "Error occurred while trying to validate TSU SAF group ranks during verification:");
         console.error(err);
         message.channel.send("I'm sorry **" + message.member.displayName + "**, but an error occured. Please try again"
-            + " later.\n\n<@126516587258707969> TSU main group rank validation error:\n" + err);
+            + " later.\n\n<@126516587258707969> TSU SAF group ranks validation error:\n" + err);
     });
 }
 

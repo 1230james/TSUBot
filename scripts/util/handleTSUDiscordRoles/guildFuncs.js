@@ -434,6 +434,75 @@ module.exports = {
     
     // =================================================================================================================
     
+    // Army Discord
+    SAF_ARM: function(ranks) {
+        let arrs = [[],[
+            "772405296790372352", // Verified
+            "851898163954319401", // MoD
+            "772405695765020672", // Marshal
+            "851890790061047808", // HICOM
+            "852022839523147817", // SCO
+            "851889500808675390", // CO
+            "851885861380292668", // NCO
+            "851881028419321906", // Ranker
+            "852695638960635915", // 86th Rifle Officer (NCO+ in this case)
+            "851892550021414933", // 86th Rifle
+        ]];
+        
+        // HC
+        if (ranks.SAF_ARM >= 50) {
+            transferBetweenArrays(arrs[0], arrs[1], "851890790061047808");
+            switch(ranks.SAF_ARM) {
+            case 70:
+                transferBetweenArrays(arrs[0], arrs[1], "851898163954319401");
+                break;
+            case 60:
+                transferBetweenArrays(arrs[0], arrs[1], "772405695765020672");
+            default:
+            }
+        }
+        
+        // SCO
+        else if (ranks.SAF_ARM >= 40) {
+            transferBetweenArrays(arrs[0], arrs[1], "852022839523147817");
+        }
+        
+        // CO
+        else if (ranks.SAF_ARM >= 30) {
+            transferBetweenArrays(arrs[0], arrs[1], "851889500808675390");
+        }
+        
+        // NCO
+        else if (ranks.SAF_ARM >= 20) {
+            transferBetweenArrays(arrs[0], arrs[1], "851885861380292668");
+        }
+        
+        // Ranker
+        else {
+            transferBetweenArrays(arrs[0], arrs[1], "851881028419321906");
+        }
+        
+        // Verified Army
+        if (ranks.SAF_ARM > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "772405296790372352");
+        }
+        
+        // =====================================================================
+        
+        // SAFD
+        if (ranks.ARM_86R > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "851892550021414933");
+            if (ranks.ARM_86R >= 60) {
+                transferBetweenArrays(arrs[0], arrs[1], "852695638960635915");
+            }
+        }
+        
+        // Return
+        return arrs;
+    },
+    
+    // =================================================================================================================
+    
     // Militsiya Discord
     MIA: function(ranks) {
         let arrs = [[],[
