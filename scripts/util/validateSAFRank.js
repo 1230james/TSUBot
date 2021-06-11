@@ -29,7 +29,7 @@ function main(userID, util, ranks) {
         if (ranks.SAF == 0) return resolve(ranks); // Can't update their rank in a group if they're not in it, so why even bother
         
         // Branches check
-        let rank = processBranchRank(ranks);
+        let rank = await processBranchRank(userID, util, ranks);
         
         // Update rank on Roblox if there's a mismatch
         if (rank != ranks.SAF) {
@@ -39,13 +39,14 @@ function main(userID, util, ranks) {
             }).catch((err) => {
                 return reject(err);
             });;
+        } else {
+            return resolve(ranks);
         }
-        return resolve(ranks);
     });
 }
 
 // Returns the proper SAF group rank for a given ranks table
-function processBranchRank(userID, util, ranks) {
+async function processBranchRank(userID, util, ranks) {
     // Validate branch ranks first
     ranks = await validateBranchRanks(userID, util, ranks);
     
@@ -96,22 +97,22 @@ function processBranchRank(userID, util, ranks) {
 
 // Checks ranks in regiment groups and validates ranks in branch groups
 function validateBranchRanks(userID, util, ranks) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(async function(resolve, reject) {
         try {
             // Validate Army rank
-            ranks = await validateABranchRank(userID, util, rank, "SAF_ARM", {
-                regimentKeys = ["ARM_86R"];
-                branchRanks  = [
-                    {rank = 255, minRegimentRank = 255}, // General Secretary
-                    {rank = 200, minRegimentRank = 210}, // Premier
-                    {rank = 190, minRegimentRank = 200}, // Deputy Premier
-                    {rank =  70, minRegimentRank = 170}, // MoD
-                    {rank =  60, minRegimentRank = 160}, // Marshal
-                    {rank =  50, minRegimentRank = 140}, // Hicom (Major General+)
-                    {rank =  40, minRegimentRank = 120}, // SCO (Lieutenant Colonel+)
-                    {rank =  30, minRegimentRank =  90}, // CO (Lieutenant+)
-                    {rank =  20, minRegimentRank =  60}, // NCO (Senior Sergeant+)
-                    {rank =  10, minRegimentRank =   1}  // Rankers (all else)
+            ranks = await validateABranchRank(userID, util, ranks, "SAF_ARM", {
+                "regimentKeys": ["ARM_86R"],
+                "branchRanks":  [
+                    {"rank": 255, "minRegimentRank": 255}, // General Secretary
+                    {"rank": 200, "minRegimentRank": 210}, // Premier
+                    {"rank": 190, "minRegimentRank": 200}, // Deputy Premier
+                    {"rank":  70, "minRegimentRank": 170}, // MoD
+                    {"rank":  60, "minRegimentRank": 160}, // Marshal
+                    {"rank":  50, "minRegimentRank": 140}, // Hicom (Major General+)
+                    {"rank":  40, "minRegimentRank": 120}, // SCO (Lieutenant Colonel+)
+                    {"rank":  30, "minRegimentRank":  90}, // CO (Lieutenant+)
+                    {"rank":  20, "minRegimentRank":  60}, // NCO (Senior Sergeant+)
+                    {"rank":  10, "minRegimentRank":   1}  // Rankers (all else)
                 ]
             });
         

@@ -52,6 +52,7 @@ for (let file of commandFiles) {
 // Jesus christ this is messy as hell
 function runAfterSetCookie(cookie) {
     // Signs of life
+    /*
     bot.util.setOnlineStatus(bot, startDate, 0).then(res => {
         if (res.status) {
             bot.util.glog("Roblox is ready!");
@@ -62,6 +63,7 @@ function runAfterSetCookie(cookie) {
         bot.util.glog("Error occurred when trying to set Roblox status.");
         console.error(err);
     });
+    */
     
     // Save cookie
     bot.util.keys.roblox = cookie;
