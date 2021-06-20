@@ -51,48 +51,64 @@ async function processBranchRank(userID, util, ranks) {
     ranks = await validateBranchRanks(userID, util, ranks);
     
     // ok now we go
-    /* actually not yet b/c i haven't made the changes to SAF's ranks yet
-    let rank   = 30; // Assume Citizen by default
-    let rankME = 70; // Ministry Employee rank val
-    let rankMO = 80; // Ministry Officer rank val
+    let rank = 10; // Assume Enlist by default
     
-    // Check for ME/MO
-    if (ranks.ADM >= 10) {
-        rank = (ranks.ADM >= 70) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.MIA >= 10) {
-        rank = (ranks.MIA >= 110) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.KGB >= 1) {
-        rank = (ranks.KGB >= 70) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.RG  >= 1) {
-        rank = (ranks.RG  >= 50) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.SPE >= 1) {
-        rank = (ranks.SPE >= 40) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.MOC >= 1) {
-        rank = (ranks.MOC >= 60) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.MOJ >= 1) {
-        rank = (ranks.MOJ >= 60) ? rankMO : rankME;
-    }
-    if (rank < rankMO && ranks.BIO >= 1) {
-        rank = (ranks.BIO >= 60) ? rankMO : rankME;
-    }
-    
-    // Check SAF/AFO
-    if (rank < rankMO && ranks.SAF >= 20) {
-        if (ranks.SAF >= 70) { // If you're an officer in SAF, you get AFO.
-            rank = 60;         // Overrides ME rank if the user would otherwise have Ministry Employee.
-        } else if (rank < rankME) {
-            rank = 50;         // SAF rank only if they're not an ME.
+    // DP+ check
+    if (ranks.MAIN >= 150) {
+        switch(ranks.MAIN) {
+            case 255:
+                return 255;
+            case 200:
+                return 200;
+            case 150:
+                return 190;
         }
     }
-    return rank;
+    
+    // MoD check
+    if (ranks.SAF == 110) {
+        return 110;
+    }
+    
+    // Army check
+    if (ranks.SAF_ARM >= 40) {
+        if (ranks.SAF_ARM == 60) {
+            rank = 100; // Army Marshal
+        } else {
+            rank = 70;  // Army regiment COs+
+        }
+    }
+    
+    /*
+    // Navy check
+    else if (ranks.SAF_NAV >= 255) {
+        if (ranks.SAF_ARM == 255) {
+            rank = 90; // Army Marshal
+        } else {
+            rank = 60;  // Army regiment COs+
+        }
+    }
+    
+    // Air Force check
+    else if (ranks.SAF_AIR >= 255) {
+        if (ranks.SAF_AIR == 255) {
+            rank = 80; // Army Marshal
+        } else {
+            rank = 50;  // Army regiment COs+
+        }
+    }
     */
-    return ranks.SAF;
+    
+    // Ranker check
+    if (ranks.SAF_ARM > 0) {
+        rank = 40;
+    } else if (ranks.SAF_NAV > 0) {
+        rank = 30;
+    } else if (ranks.SAF_AIR > 0) {
+        rank = 20;
+    }
+    
+    return rank;
 }
 
 // Checks ranks in regiment groups and validates ranks in branch groups
