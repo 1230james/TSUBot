@@ -299,133 +299,52 @@ module.exports = {
     SAF: function(ranks) {
         let arrs = [[],[
             "499283969821507584", // Verified
-            "499263781734711297", // Marshal
-            "499263782380371978", // CG
-            "499263782422446091", // LG
-            "499263783462502421", // MG
-            "499263783982596097", // Colonel
-            "499263784582381599", // LC
-            "499263784662204426", // Major
-            "499263784767062057", // Captain
-            "499263785899655185", // SLt
-            "499263785958244352", // Lt
-            "744290356484636672", // SWO
-            "744290517684322396", // WO
-            "562832547520970763", // SM
-            "499263787048894465", // SS
-            "499263787333976074", // Sergeant
-            "499263788126830602", // JS
-            "712033893737431121", // Efreitor
-            "499263788344934411", // Private
-            "499263788621627393", // Enlist
+            "499263781734711297", // MoD
+            "499263782380371978", // Army Marshal 
+            "499263782422446091", // Navy Marshal
+            "499263783462502421", // AF Marshal
+            
+            "499263783982596097", // Army CO
+            "499263784582381599", // Navy CO
+            "499263784662204426", // AF CO
+            
+            "499263784767062057", // Army
+            "499263785899655185", // Navy
+            "499263785958244352", // AF
+            
             "544350978443444225", // HC
-            "544347031380951051", // HR
-            "519522917625757708", // MR
-            "582740046923300910", // NCO
-            "772395672518393876", // 2SA TL
-            "772395689623420928", // 2SA SL
-            "772395694513717248", // 2SA
+            "544347031380951051"  // HR
         ]];
         
-        // HC
-        if (ranks.SAF >= 130) {
-            transferBetweenArrays(arrs[0], arrs[1], "544350978443444225");
-            switch(ranks.SAF) {
-            case 160:
-                transferBetweenArrays(arrs[0], arrs[1], "499263781734711297");
-                break;
-            case 150:
-                transferBetweenArrays(arrs[0], arrs[1], "499263782380371978");
-                break;
-            case 140:
-                transferBetweenArrays(arrs[0], arrs[1], "499263782422446091");
-                break;
-            case 130:
-                transferBetweenArrays(arrs[0], arrs[1], "499263783462502421");
-            }
-        }
-        
-        // HR
-        else if (ranks.SAF >= 100) {
-            transferBetweenArrays(arrs[0], arrs[1], "544347031380951051");
-            switch(ranks.SAF) {
-            case 120:
-                transferBetweenArrays(arrs[0], arrs[1], "499263783982596097");
-                break;
-            case 110:
-                transferBetweenArrays(arrs[0], arrs[1], "499263784582381599");
-                break;
-            case 100:
-                transferBetweenArrays(arrs[0], arrs[1], "499263784662204426");
-            }
-        }
-        
-        // MR
-        else if (ranks.SAF >= 70) {
-            transferBetweenArrays(arrs[0], arrs[1], "519522917625757708");
-            switch(ranks.SAF) {
-            case 90:
-                transferBetweenArrays(arrs[0], arrs[1], "499263784767062057");
-                break;
-            case 80:
-                transferBetweenArrays(arrs[0], arrs[1], "499263785899655185");
-                break;
-            case 70:
-                transferBetweenArrays(arrs[0], arrs[1], "499263785958244352");
-            }
-        }
-        
-        // NCO
-        else if (ranks.SAF >= 60) {
-            transferBetweenArrays(arrs[0], arrs[1], "582740046923300910");
-            switch(ranks.SAF) {
-            case 66:
-                transferBetweenArrays(arrs[0], arrs[1], "744290356484636672");
-                break;
-            case 63:
-                transferBetweenArrays(arrs[0], arrs[1], "744290517684322396");
-                break;
-            case 60:
-                transferBetweenArrays(arrs[0], arrs[1], "562832547520970763");
-            }
-        }
-        
-        // LR + Verified SAF
-        if (ranks.SAF > 0) {
-            transferBetweenArrays(arrs[0], arrs[1], "499283969821507584");
-            switch(ranks.SAF) {
-            case 50:
-                transferBetweenArrays(arrs[0], arrs[1], "499263787048894465");
-                break;
-            case 40:
-                transferBetweenArrays(arrs[0], arrs[1], "499263787333976074");
-                break;
-            case 30:
-                transferBetweenArrays(arrs[0], arrs[1], "499263788126830602");
-                break;
-            case 25:
-                transferBetweenArrays(arrs[0], arrs[1], "712033893737431121");
-                break;
-            case 20:
-                transferBetweenArrays(arrs[0], arrs[1], "499263788344934411");
-                break;
-            case 10:
-                transferBetweenArrays(arrs[0], arrs[1], "499263788621627393");
-            }
-        }
-        
-        // SAFD
-        if (ranks.SAD > 0) {
-            if (ranks.SAD >= 150) {
-                transferBetweenArrays(arrs[0], arrs[1], "772395694513717248");
-                switch(ranks.SAD) {
-                case 156:
-                    transferBetweenArrays(arrs[0], arrs[1], "772395672518393876");
-                    break;
-                case 153:
-                    transferBetweenArrays(arrs[0], arrs[1], "772395689623420928");
+        // Army
+        if (ranks.SAF_ARM > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "499263784767062057");
+            if (ranks.SAF_ARM >= 40) {
+                if (ranks.SAF_ARM == 60) {
+                    transferBetweenArrays(arrs[0], arrs[1], "499263782380371978");
+                } else {
+                    transferBetweenArrays(arrs[0], arrs[1], "499263783982596097");
                 }
             }
+        }
+        
+        /*
+        // Navy
+        if (ranks.SAF_NAV > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "499263785899655185");
+            
+        }
+        
+        // Air Force
+        if (ranks.SAF_AIR > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "499263785958244352");
+            
+        }
+        */
+        
+        // Verified SAF
+        if (ranks.SAF > 0) {
+            transferBetweenArrays(arrs[0], arrs[1], "499283969821507584");
         }
         
         // Return
