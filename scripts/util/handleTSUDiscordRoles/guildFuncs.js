@@ -311,16 +311,19 @@ module.exports = {
             "499263784767062057", // Army
             "499263785899655185", // Navy
             "499263785958244352", // AF
+            "855986800992583731", // Enlist
             
             "544350978443444225", // HC
             "544347031380951051"  // HR
         ]];
+        let isEnlist = true;
         
         // Army
-        if (ranks.SAF_ARM > 0) {
+        if (ranks.SAF_ARM > 10) {
+            isEnlist = false;
             transferBetweenArrays(arrs[0], arrs[1], "499263784767062057");
-            if (ranks.SAF_ARM >= 40) {
-                if (ranks.SAF_ARM == 60) {
+            if (ranks.SAF_ARM >= 50) {
+                if (ranks.SAF_ARM == 70) {
                     transferBetweenArrays(arrs[0], arrs[1], "499263782380371978");
                 } else {
                     transferBetweenArrays(arrs[0], arrs[1], "499263783982596097");
@@ -330,13 +333,15 @@ module.exports = {
         
         /*
         // Navy
-        if (ranks.SAF_NAV > 0) {
+        if (ranks.SAF_NAV > 10) {
+            isEnlist = false;
             transferBetweenArrays(arrs[0], arrs[1], "499263785899655185");
             
         }
         
         // Air Force
-        if (ranks.SAF_AIR > 0) {
+        if (ranks.SAF_AIR > 10) {
+            isEnlist = false;
             transferBetweenArrays(arrs[0], arrs[1], "499263785958244352");
             
         }
@@ -345,6 +350,16 @@ module.exports = {
         // Verified SAF
         if (ranks.SAF > 0) {
             transferBetweenArrays(arrs[0], arrs[1], "499283969821507584");
+            if (isEnlist) {
+                transferBetweenArrays(arrs[0], arrs[1], "855986800992583731");
+            }
+            if (ranks.SAF >= 50) { // HRs
+                if (ranks.SAF >= 80) { // Marshals+
+                    transferBetweenArrays(arrs[0], arrs[1], "544350978443444225");
+                } else { // COs
+                    transferBetweenArrays(arrs[0], arrs[1], "544347031380951051");
+                }
+            }
         }
         
         // Return
@@ -364,41 +379,47 @@ module.exports = {
             "851889500808675390", // CO
             "851885861380292668", // NCO
             "851881028419321906", // Ranker
+            "855986262343024681", // Enlists
             "852695638960635915", // 86th Rifle Officer (NCO+ in this case)
             "851892550021414933", // 86th Rifle
         ]];
         
         // HC
-        if (ranks.SAF_ARM >= 50) {
+        if (ranks.SAF_ARM >= 60) {
             transferBetweenArrays(arrs[0], arrs[1], "851890790061047808");
             switch(ranks.SAF_ARM) {
-            case 70:
+            case 80:
                 transferBetweenArrays(arrs[0], arrs[1], "851898163954319401");
                 break;
-            case 60:
+            case 70:
                 transferBetweenArrays(arrs[0], arrs[1], "772405695765020672");
             default:
             }
         }
         
         // SCO
-        else if (ranks.SAF_ARM >= 40) {
+        else if (ranks.SAF_ARM >= 50) {
             transferBetweenArrays(arrs[0], arrs[1], "852022839523147817");
         }
         
         // CO
-        else if (ranks.SAF_ARM >= 30) {
+        else if (ranks.SAF_ARM >= 40) {
             transferBetweenArrays(arrs[0], arrs[1], "851889500808675390");
         }
         
         // NCO
-        else if (ranks.SAF_ARM >= 20) {
+        else if (ranks.SAF_ARM >= 30) {
             transferBetweenArrays(arrs[0], arrs[1], "851885861380292668");
         }
         
         // Ranker
-        else {
+        else if (ranks.SAF_ARM >= 20) {
             transferBetweenArrays(arrs[0], arrs[1], "851881028419321906");
+        }
+        
+        // Enlist
+        else {
+            transferBetweenArrays(arrs[0], arrs[1], "855986262343024681");
         }
         
         // Verified Army

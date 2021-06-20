@@ -70,9 +70,9 @@ async function processBranchRank(userID, util, ranks) {
         return 110;
     }
     
-    // Army check
-    if (ranks.SAF_ARM >= 40) {
-        if (ranks.SAF_ARM == 60) {
+    // Army officer check
+    if (ranks.SAF_ARM >= 50) {
+        if (ranks.SAF_ARM == 70) {
             rank = 100; // Army Marshal
         } else {
             rank = 70;  // Army regiment COs+
@@ -80,33 +80,34 @@ async function processBranchRank(userID, util, ranks) {
     }
     
     /*
-    // Navy check
+    // Navy officer check
     else if (ranks.SAF_NAV >= 255) {
         if (ranks.SAF_ARM == 255) {
-            rank = 90; // Army Marshal
+            rank = 90; // Navy Marshal
         } else {
-            rank = 60;  // Army regiment COs+
+            rank = 60;  // Navy regiment COs+
         }
     }
     
-    // Air Force check
+    // Air Force officer check
     else if (ranks.SAF_AIR >= 255) {
         if (ranks.SAF_AIR == 255) {
-            rank = 80; // Army Marshal
+            rank = 80; // Air Force Marshal
         } else {
-            rank = 50;  // Army regiment COs+
+            rank = 50;  // Air Force regiment COs+
         }
     }
     */
     
     // Ranker check
-    if (ranks.SAF_ARM > 0) {
+    else if (ranks.SAF_ARM > 10) {
         rank = 40;
-    } else if (ranks.SAF_NAV > 0) {
+    } /* else if (ranks.SAF_NAV > 10) {
         rank = 30;
-    } else if (ranks.SAF_AIR > 0) {
+    } else if (ranks.SAF_AIR > 10) {
         rank = 20;
     }
+    */
     
     return rank;
 }
@@ -122,13 +123,14 @@ function validateBranchRanks(userID, util, ranks) {
                     {"rank": 255, "minRegimentRank": 255}, // General Secretary
                     {"rank": 200, "minRegimentRank": 210}, // Premier
                     {"rank": 190, "minRegimentRank": 200}, // Deputy Premier
-                    {"rank":  70, "minRegimentRank": 170}, // MoD
-                    {"rank":  60, "minRegimentRank": 160}, // Marshal
-                    {"rank":  50, "minRegimentRank": 140}, // Hicom (Major General+)
-                    {"rank":  40, "minRegimentRank": 120}, // SCO (Lieutenant Colonel+)
-                    {"rank":  30, "minRegimentRank":  90}, // CO (Lieutenant+)
-                    {"rank":  20, "minRegimentRank":  60}, // NCO (Senior Sergeant+)
-                    {"rank":  10, "minRegimentRank":   1}  // Rankers (all else)
+                    {"rank":  80, "minRegimentRank": 170}, // MoD
+                    {"rank":  70, "minRegimentRank": 160}, // Marshal
+                    {"rank":  60, "minRegimentRank": 140}, // Hicom (Major General+)
+                    {"rank":  50, "minRegimentRank": 120}, // SCO (Lieutenant Colonel+)
+                    {"rank":  40, "minRegimentRank":  90}, // CO (Lieutenant+)
+                    {"rank":  30, "minRegimentRank":  60}, // NCO (Senior Sergeant+)
+                    {"rank":  20, "minRegimentRank":  20}, // Rankers (Private+)
+                    {"rank":  10, "minRegimentRank":   1}  // Enlists
                 ]
             });
         
@@ -151,7 +153,7 @@ function validateABranchRank(userID, util, ranks, branchKey, info) {
             for (let rankInfo of info.branchRanks) { // loop stops at the highest branch rank they deserve from this regiment
                 if (ranks[key] == 0) continue; // skip regiments they're not in
                 if (rank < rankInfo.rank && ranks[key] >= rankInfo.minRegimentRank) {
-                    rank = rankInfo.rank
+                    rank = rankInfo.rank;
                     break;
                 }
             }
