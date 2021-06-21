@@ -430,7 +430,7 @@ module.exports = {
         // =====================================================================
         
         // Regiments
-        if (ranks.SAF_ARM < 50) { // exclude HICOM
+        if (ranks.SAF_ARM < 60) { // exclude HICOM
             // 86th Rifle
             if (ranks.ARM_86R > 0) {
                 transferBetweenArrays(arrs[0], arrs[1], "851892550021414933");
