@@ -489,7 +489,7 @@ module.exports = {
         }
         
         // HR
-        else if (ranks.MIA >= 120) {
+        else if (ranks.MIA >= 110) {
             transferBetweenArrays(arrs[0], arrs[1], "510674685143547905");
             switch(ranks.MIA) {
             case 140:
@@ -500,6 +500,9 @@ module.exports = {
                 break;
             case 120:
                 transferBetweenArrays(arrs[0], arrs[1], "510675244009390080");
+                break;
+            case 110:
+                transferBetweenArrays(arrs[0], arrs[1], "510675246152417300");
             }
         }
         
@@ -507,8 +510,6 @@ module.exports = {
         else if (ranks.MIA >= 50) {
             transferBetweenArrays(arrs[0], arrs[1], "510674876097363990");
             switch(ranks.MIA) {
-            case 110:
-                transferBetweenArrays(arrs[0], arrs[1], "510675246152417300");
             case 100:
                 transferBetweenArrays(arrs[0], arrs[1], "510675248253894676");
                 break;
