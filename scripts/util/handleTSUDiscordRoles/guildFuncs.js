@@ -330,7 +330,8 @@ module.exports = {
             "885760742924615731", // Army Ranker
             "885760745176965160", // Army Enlist
             
-            "885760253860405268" // Army 86RR
+            "885778969293631578", // Army 86RR Staff
+            "885760253860405268"  // Army 86RR
         ]];
         
         // Army
@@ -410,6 +411,15 @@ module.exports = {
             case 20:
                 transferBetweenArrays(arrs[0], arrs[1], "885756349231812618");
             } // Enlists handled at the bottom
+            
+            // Regiments
+            if (ranks.SAF_ARM < 60) { // we only give a crap about non hicom
+                let isOfficer = regimentRank >= 90; // Lt+
+                if (ranks.ARM_86R > 0) {
+                    transferBetweenArrays(arrs[0], arrs[1], "885760253860405268");
+                    if (isOfficer) transferBetweenArrays(arrs[0], arrs[1], "885778969293631578");
+                }
+            }
         }
         
         /*
