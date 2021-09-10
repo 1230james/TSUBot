@@ -299,36 +299,117 @@ module.exports = {
     SAF: function(ranks) {
         let arrs = [[],[
             "499283969821507584", // Verified
+            
             "499263781734711297", // MoD
-            "499263782380371978", // Army Marshal 
+            
+            "499263782380371978", // Army Marshal
+            "885755932804522034", // CG
+            "885755937112072224", // MG
+            "885755940354277397", // Colonel
+            "885756314070958090", // LtCol
+            "885756317736767509", // Major
+            "885756321012543529", // Captain
+            "885756324338606090", // Lt
+            "885756330672009256", // WO
+            "885756334312665129", // SM
+            "885756337261269012", // SrSgt
+            "885756343485620244", // Sgt
+            "885756340906131486", // JrSgt
+            "885756346522300426", // Efr
+            "885756349231812618", // Pvt
+            
             "499263782422446091", // Navy Marshal
             "499263783462502421", // AF Marshal
             
-            "499263783982596097", // Army CO
-            "499263784582381599", // Navy CO
-            "499263784662204426", // AF CO
-            
-            "499263784767062057", // Army
-            "499263785899655185", // Navy
-            "499263785958244352", // AF
             "855986800992583731", // Enlist
             
-            "544350978443444225", // HC
-            "544347031380951051"  // HR
+            "885760734636695552", // Army HICOM
+            "885760737123917884", // Army SCO
+            "885760739380428830", // Army CO
+            "885760740806508545", // Army NCO
+            "885760742924615731", // Army Ranker
+            "885760745176965160", // Army Enlist
+            
+            "885760253860405268" // Army 86RR
         ]];
-        let isEnlist = true;
         
         // Army
-        if (ranks.SAF_ARM > 10) {
-            isEnlist = false;
-            transferBetweenArrays(arrs[0], arrs[1], "499263784767062057");
-            if (ranks.SAF_ARM >= 50) {
-                if (ranks.SAF_ARM == 70) {
-                    transferBetweenArrays(arrs[0], arrs[1], "499263782380371978");
-                } else {
-                    transferBetweenArrays(arrs[0], arrs[1], "499263783982596097");
+        if (ranks.SAF_ARM > 0) {
+            // Handle division rank
+            switch(ranks.SAF_ARM) {
+            case 70:
+            case 60:
+                transferBetweenArrays(arrs[0], arrs[1], "885760734636695552");
+                break;
+            case 50:
+                transferBetweenArrays(arrs[0], arrs[1], "885760737123917884");
+                break;
+            case 40:
+                transferBetweenArrays(arrs[0], arrs[1], "885760739380428830");
+                break;
+            case 30:
+                transferBetweenArrays(arrs[0], arrs[1], "885760740806508545");
+                break;
+            case 20:
+                transferBetweenArrays(arrs[0], arrs[1], "885760742924615731");
+                break;
+            case 10:
+                transferBetweenArrays(arrs[0], arrs[1], "885760745176965160");
+            }
+            
+            // Handle regimental rank
+            let regimentRank = 0;
+            for (let key in ranks) {
+                if (key.startsWith("ARM") && ranks[key] > regimentRank) {
+                    regimentRank = ranks[key];
                 }
             }
+            switch(regimentRank) {
+            case 160:
+                transferBetweenArrays(arrs[0], arrs[1], "499263782380371978");
+                break;
+            case 150:
+                transferBetweenArrays(arrs[0], arrs[1], "885755932804522034");
+                break;
+            case 140:
+                transferBetweenArrays(arrs[0], arrs[1], "885755937112072224");
+                break;
+            case 130:
+                transferBetweenArrays(arrs[0], arrs[1], "885755940354277397");
+                break;
+            case 120:
+                transferBetweenArrays(arrs[0], arrs[1], "885756314070958090");
+                break;
+            case 110:
+                transferBetweenArrays(arrs[0], arrs[1], "885756317736767509");
+                break;
+            case 100:
+                transferBetweenArrays(arrs[0], arrs[1], "885756321012543529");
+                break;
+            case 90:
+                transferBetweenArrays(arrs[0], arrs[1], "885756324338606090");
+                break;
+            case 80:
+                transferBetweenArrays(arrs[0], arrs[1], "885756330672009256");
+                break;
+            case 70:
+                transferBetweenArrays(arrs[0], arrs[1], "885756334312665129");
+                break;
+            case 60:
+                transferBetweenArrays(arrs[0], arrs[1], "885756337261269012");
+                break;
+            case 50:
+                transferBetweenArrays(arrs[0], arrs[1], "885756343485620244");
+                break;
+            case 40:
+                transferBetweenArrays(arrs[0], arrs[1], "885756340906131486");
+                break;
+            case 30:
+                transferBetweenArrays(arrs[0], arrs[1], "885756346522300426");
+                break;
+            case 20:
+                transferBetweenArrays(arrs[0], arrs[1], "885756349231812618");
+            } // Enlists handled at the bottom
         }
         
         /*
@@ -350,93 +431,9 @@ module.exports = {
         // Verified SAF
         if (ranks.SAF > 0) {
             transferBetweenArrays(arrs[0], arrs[1], "499283969821507584");
-            if (isEnlist) {
+            // Enlists
+            if (ranks.SAF_ARM <= 10) { // && ranks.SAF_NAV <= 10 && ranks.SAF_AIR <= 10) {
                 transferBetweenArrays(arrs[0], arrs[1], "855986800992583731");
-            }
-            if (ranks.SAF >= 50) { // HRs
-                if (ranks.SAF >= 80) { // Marshals+
-                    transferBetweenArrays(arrs[0], arrs[1], "544350978443444225");
-                } else { // COs
-                    transferBetweenArrays(arrs[0], arrs[1], "544347031380951051");
-                }
-            }
-        }
-        
-        // Return
-        return arrs;
-    },
-    
-    // =================================================================================================================
-    
-    // Army Discord
-    SAF_ARM: function(ranks) {
-        let arrs = [[],[
-            "772405296790372352", // Verified
-            "851898163954319401", // MoD
-            "772405695765020672", // Marshal
-            "851890790061047808", // HICOM
-            "852022839523147817", // SCO
-            "851889500808675390", // CO
-            "851885861380292668", // NCO
-            "851881028419321906", // Ranker
-            "855986262343024681", // Enlists
-            "852695638960635915", // 86th Rifle Officer (NCO+ in this case)
-            "851892550021414933", // 86th Rifle
-        ]];
-        
-        // HC
-        if (ranks.SAF_ARM >= 60) {
-            transferBetweenArrays(arrs[0], arrs[1], "851890790061047808");
-            switch(ranks.SAF_ARM) {
-            case 80:
-                transferBetweenArrays(arrs[0], arrs[1], "851898163954319401");
-                break;
-            case 70:
-                transferBetweenArrays(arrs[0], arrs[1], "772405695765020672");
-            default:
-            }
-        }
-        
-        // SCO
-        else if (ranks.SAF_ARM >= 50) {
-            transferBetweenArrays(arrs[0], arrs[1], "852022839523147817");
-        }
-        
-        // CO
-        else if (ranks.SAF_ARM >= 40) {
-            transferBetweenArrays(arrs[0], arrs[1], "851889500808675390");
-        }
-        
-        // NCO
-        else if (ranks.SAF_ARM >= 30) {
-            transferBetweenArrays(arrs[0], arrs[1], "851885861380292668");
-        }
-        
-        // Ranker
-        else if (ranks.SAF_ARM >= 20) {
-            transferBetweenArrays(arrs[0], arrs[1], "851881028419321906");
-        }
-        
-        // Enlist
-        else {
-            transferBetweenArrays(arrs[0], arrs[1], "855986262343024681");
-        }
-        
-        // Verified Army
-        if (ranks.SAF_ARM > 0) {
-            transferBetweenArrays(arrs[0], arrs[1], "772405296790372352");
-        }
-        
-        // =====================================================================
-        
-        // Regiments
-        if (ranks.SAF_ARM < 60) { // exclude HICOM
-            // 86th Rifle
-            if (ranks.ARM_86R > 0) {
-                transferBetweenArrays(arrs[0], arrs[1], "851892550021414933");
-                if (ranks.ARM_86R >= 60) {
-                    transferBetweenArrays(arrs[0], arrs[1], "852695638960635915");
-                }
             }
         }
         
