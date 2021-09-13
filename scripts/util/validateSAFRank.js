@@ -126,7 +126,7 @@ function validateBranchRanks(userID, util, ranks) {
                     {"rank":  80, "minRegimentRank": 170}, // MoD
                     {"rank":  70, "minRegimentRank": 160}, // Marshal
                     {"rank":  60, "minRegimentRank": 140}, // Hicom (Major General+)
-                    {"rank":  50, "minRegimentRank": 120}, // SCO (Lieutenant Colonel+)
+                    {"rank":  50, "minRegimentRank": 110}, // SCO (Major+)
                     {"rank":  40, "minRegimentRank":  90}, // CO (Lieutenant+)
                     {"rank":  30, "minRegimentRank":  60}, // NCO (Senior Sergeant+)
                     {"rank":  20, "minRegimentRank":  20}, // Rankers (Private+)
