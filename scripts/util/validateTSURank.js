@@ -91,7 +91,7 @@ function processEmployeeRank(ranks) {
     
     // Check SAF/AFO
     if (rank < rankMO && ranks.SAF >= 20) {
-        if (ranks.SAF >= 70) { // If you're an officer in SAF, you get AFO.
+        if (ranks.SAF >= 50) { // If you're an officer in SAF, you get AFO.
             rank = 60;         // Overrides ME rank if the user would otherwise have Ministry Employee.
         } else if (rank < rankME) {
             rank = 50;         // SAF rank only if they're not an ME.
