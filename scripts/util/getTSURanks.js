@@ -40,7 +40,10 @@ function main(groupIDs, userID) {
                 try {
                     json = JSON.parse(chunk);
                 } catch(err) {
-                    reject(err);
+                    return reject(err);
+                }
+                if (!json) {
+                    return reject("Error occurred when parsing chunk:\n" + chunk + "\n");
                 }
                 let data = json.data;
                 if (!data) {
