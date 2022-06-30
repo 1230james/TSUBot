@@ -11,6 +11,8 @@
 const https       = require("https");
 const RateLimiter = require("limiter").RateLimiter;
 
+const keys = require("../../keys.json"); // TODO: Something better than this hacky garbage solution
+
 const limiter = new RateLimiter(60, "minute");
 
 var robloxIDs = {}; // [string discordSnowflake]: string robloxUserID
@@ -39,10 +41,11 @@ function main(userID, forceQuery) {
         
         // Set up options
         let options = {
-            "host":    "api.blox.link",
-            "path":    "/v1/user/" + userID,
+            "host":    "v3.blox.link",
+            "path":    "/developer/discord/" + userID,
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "api-key":      keys.bloxlink
             }
         };
         
@@ -52,12 +55,12 @@ function main(userID, forceQuery) {
                 console.error(err);
                 return resolve(-2);
             }
-            return request(resolve, reject, options);
+            return request(resolve, reject, options, userID);
         });
     });
 }
 
-function request(resolve, reject, options) {
+function request(resolve, reject, options, userID) {
     let req = https.request(options, (res) => {
         res.on("data", (chunk) => {
             // Parse response
@@ -67,21 +70,20 @@ function request(resolve, reject, options) {
             let data = JSON.parse(chunk);
             
             // Interpret it
-            if (data.status == "ok") {
-                return resolve(parseInt(data.primaryAccount));
-            } else if (data.status == "error") {
-                // these are very stupid but i'm lazy af rn
-                if (data.error == "This user is not linked with Bloxlink.") {
-                    return resolve(-1);
-                } else if (data.error.includes("not have a primary account")) {
+            if (data.success === true) { // first and last time I use triple equals
+                if (data.user.primaryAccount == null) { // not verified or no primary account set
                     return resolve(-1);
                 }
-                return reject(data.error);
+                let robloxID      = parseInt(data.user.primaryAccount);
+                robloxIDs[userID] = robloxID
+                return resolve(robloxID);
+            } else {
+                return reject("Server responded with: " + data.reason);
             }
             
             // We should never be here, but if we have, then something's gone VERY wrong
             // ...or the API got updated
-            return reject("Uninterpretable response received from server. Received status: " + data.status);
+            return reject("Uninterpretable response received from server.");
         });
     });
     req.on("error", (e) => {
