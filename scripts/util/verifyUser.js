@@ -36,11 +36,14 @@ function processRobloxID(message, bot, robloxID) {
 Please head to <https://blox.link> to verify and set your primary account.
 
 __Instructions__
-• If you aren't already signed in, please click \`Sign in with Discord\` in the upper-right.
-• Visit this page: <https://blox.link/verification/485528044828753940>
-• Scroll down to \`Link A New Account To This Server\` and follow the instructions to verify your Roblox account.
-• **Remember to CHECK the \`Set this as your primary account\` box!**
-• Once complete, visit this page: <https://blox.link/account>, and double-check to make sure your primary account is set correctly.
+• Enter your username into the box labeled \`Enter your Roblox username\` and press \`Get verified now\`.
+• Follow the Account Information and Account Verification instructions.
+• *You do not need to select any TSU Discord server in the Select Servers section. We ignore these settings.*
+• Go to the Verifications page via the button on the left side of the page.
+    • Mobile users can find this button in the dropdown in the upper left.
+• Find the account you wish to verify with and set it as your primary account.
+    • Identify the account you wish to mark as your primary.
+    • Click the star near the upper-right corner of that account's picture.
 • After you've finished everything above, come back here and say \`!verify -force\`.`);
         bot.util.log(message, "Attempted to fetch Roblox UserID, but found none. Sent verification instructions.");
         break;
