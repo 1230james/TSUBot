@@ -78,7 +78,7 @@ function request(resolve, reject, options, userID) {
                 robloxIDs[userID] = robloxID
                 return resolve(robloxID);
             } else {
-                if (data.error.toLowerCase.includes("not verified")) { // very crude method
+                if (data.error.toLowerCase().includes("not verified")) { // very crude method
                     return resolve(-1);
                 }
                 return reject("Server responded with: " + data.error);
