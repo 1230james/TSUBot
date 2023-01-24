@@ -34,16 +34,21 @@ function main(groupIDs, userID) {
         }
         
         // Web request
+        let chunks = "";
         let req = https.request(options, (res) => {
             res.on("data", (chunk) => {
+                chunks += chunk;
+            });
+            res.on("end", () => {
                 let json;
                 try {
-                    json = JSON.parse(chunk);
+                    json = JSON.parse(chunks);
                 } catch(err) {
+                    console.log('' + chunks);
                     return reject(err);
                 }
                 if (!json) {
-                    return reject("Error occurred when parsing chunk:\n" + chunk + "\n");
+                    return reject("Error occurred when parsing chunk:\n" + chunks + "\n");
                 }
                 let data = json.data;
                 if (!data) {
